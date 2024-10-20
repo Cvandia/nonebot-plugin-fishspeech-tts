@@ -108,6 +108,7 @@ git clone https://github.com/Cvandia/nonebot-plugin-fishspeech-tts
 - 1.将`fish-speech` 仓库 `git clone` 至本地
 - 2.运行`install_env.bat`安装虚拟环境以及所需依赖
 - 3.运行`start.bat`初次启动
+- 4.修改`API_FLAGS.txt`后再次启动即可
 
 ### `启动API服务`
 
