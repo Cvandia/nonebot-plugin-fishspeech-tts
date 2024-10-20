@@ -74,7 +74,7 @@ git clone https://github.com/Cvandia/nonebot-plugin-fishspeech-tts
 |:-----:|:----:|:----:|:---:|:----:|
 |tts_is_online|bool|是|True|是否使用云端api|
 |tts_is_to_me|bool|是|True|是否需要at触发(防止误触)|
-|online_authorization|str|看需求|None|fish-audio 后端api，详见[链接](https://fish.audio/zh-CN/go-api/api-keys/)||
+|online_authorization|str|看需求|None|fish-audio 后端api鉴权，详见[链接](https://fish.audio/zh-CN/go-api/api-keys/)||
 |tts_api_url|str|看需求|"http://127.0.0.1:8080"|离线或自定义api地址
 |tts_audio_path|str|看需求|"./data/参考音频"|合成角色语音路劲|
 
@@ -100,3 +100,27 @@ git clone https://github.com/Cvandia/nonebot-plugin-fishspeech-tts
 
 - [x] [nonebot2](https://github.com/nonebot/nonebot2): 本项目的基础，非常好用的聊天机器人框架。
 - [x] [fish-speech](https://github.com/fishaudio/fish-speech):零样本 & 小样本 TTS：输入 10 到 30 秒的声音样本即可生成高质量的 TTS 输出
+
+
+## ⭐ 额外帮助
+
+### `fish-speech`
+- 1.将`fish-speech` 仓库 `git clone` 至本地
+- 2.运行`install_env.bat`安装虚拟环境以及所需依赖
+- 3.运行`start.bat`初次启动
+
+### `启动API服务`
+
+- 1.修改`API_FLAGS.txt`大致为，即取消`api`前面的`#`号
+```
+# --infer
+--api
+--listen 0.0.0.0:8080 \ #监听接口
+...
+
+```
+### 在`API_FLAGS.txt`里添加额外参数
+- 1.`--complie` ->是否启动编译后的模型 (更快的生成tts，但启动较慢)
+- 2.`--workers 数字` ->启动`数字`个多协程 (请务必设置，因为默认一个容易阻塞)
+- 3.更多参考[官方文档](https://speech.fish.audio/zh)
+
