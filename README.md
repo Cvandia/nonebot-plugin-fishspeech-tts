@@ -78,7 +78,7 @@ git clone https://github.com/Cvandia/nonebot-plugin-fishspeech-tts
 |tts_api_url|str|看需求|"http://127.0.0.1:8080"|离线或自定义api地址
 |tts_audio_path|str|看需求|"./data/参考音频"|合成角色语音路劲|
 
-**注：参考音频的文件名格式为：［角色名］音频对应的文字标签.wav
+**注：参考音频的文件名格式为：［角色名］音频对应的文字标签.wav**
 
 ## ⭐ 使用
 
