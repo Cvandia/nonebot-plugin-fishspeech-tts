@@ -18,6 +18,7 @@ class ServeReferenceAudio(BaseModel):
 
 
 class ServeTTSRequest(BaseModel):
+    """TTS请求"""
 
     text: str = ""
     chunk_length: int = 50
@@ -78,9 +79,9 @@ class FishSpeechAPI:
         for audio in self.path_audio.iterdir():
             if speaker_name in audio.name and audio.suffix == ".wav":
                 speaker_audio_path.append(audio)
-        logger.debug(f"获取到说话人的语音路劲: {speaker_audio_path}")
+        logger.debug(f"获取到角色的语音路劲: {speaker_audio_path}")
         if not speaker_audio_path:
-            raise FileNotFoundError(f"未找到说话人{speaker_name}的音频文件")
+            raise FileNotFoundError(f"未找到角色:{speaker_name}的音频文件")
         return speaker_audio_path
 
     async def generate_servettsrequest(
@@ -145,7 +146,7 @@ class FishSpeechAPI:
             logger.error(f"获取TTS音频失败: {e}")
             raise APIException("获取TTS音频超时, 你的文本太长啦！")
         except Exception:
-            raise APIException("获取TTS音频失败")
+            raise APIException("获取TTS音频失败, 检查API后端")
 
     def get_speaker_list(self) -> list[str]:
         """

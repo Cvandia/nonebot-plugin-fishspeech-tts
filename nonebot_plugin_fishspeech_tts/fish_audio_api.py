@@ -1,6 +1,6 @@
 from .config import config
 from httpx import AsyncClient
-from .exception import APIException
+from .exception import APIException, AuthorizationException
 import enum
 
 
@@ -46,7 +46,7 @@ class FishAudioAPI:
             )
             resp_data = response.json()
             if resp_data["total"] == 0:
-                raise APIException("获取发音人列表为空")
+                raise APIException("获取语音角色列表为空")
             else:
                 return resp_data["items"][0]["_id"]
 
@@ -88,7 +88,10 @@ class FishAudioAPI:
         balance_url = "https://api.fish.audio/wallet/self/api-credit"
         async with AsyncClient() as client:
             response = await client.get(balance_url, headers=self.headers)
-            return response.json()["credit"]
+            try:
+                return response.json()["credit"]
+            except KeyError:
+                raise AuthorizationException("授权码错误或已失效")
 
 
 fish_audio_api = FishAudioAPI()
