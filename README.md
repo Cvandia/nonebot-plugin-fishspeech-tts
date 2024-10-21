@@ -108,6 +108,7 @@ git clone https://github.com/Cvandia/nonebot-plugin-fishspeech-tts
 
 
 ## ⭐ 额外帮助
+
 ### 离线搭建`fish-speech`
 - 1.将`fish-speech` 仓库 `git clone` 至本地
 - 2.运行`install_env.bat`安装虚拟环境以及所需依赖
