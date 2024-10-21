@@ -3,6 +3,7 @@ from httpx import AsyncClient
 from .exception import APIException
 import enum
 
+
 class ChunkLength(enum.Enum):
     SHORT = 800
     NORMAL = 1000
@@ -88,5 +89,6 @@ class FishAudioAPI:
         async with AsyncClient() as client:
             response = await client.get(balance_url, headers=self.headers)
             return response.json()["credit"]
+
 
 fish_audio_api = FishAudioAPI()

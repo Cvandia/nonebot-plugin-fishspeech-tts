@@ -137,8 +137,8 @@ class FishSpeechAPI:
                     headers=self.headers,
                     content=ormsgpack.packb(
                         request, option=ormsgpack.OPT_SERIALIZE_PYDANTIC
-                    ), # type: ignore
-                    timeout = 120
+                    ),  # type: ignore
+                    timeout=120,
                 )
                 return response.content
         except TimeoutException as e:
