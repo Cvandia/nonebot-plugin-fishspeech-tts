@@ -33,7 +33,7 @@ with contextlib.suppress(Exception):
         name="FishSpeechTTS",
         description="一个插件,通过调用在线或本地api发送TTS语音",
         usage="发送:[发音人]说[文本]即可发送TTS语音",
-        homepage="https://github.com/Cvandia/nonebot-plugin-game-torrent",
+        homepage="https://github.com/Cvandia/nonebot-plugin-fishspeech-tts",
         config=Config,
         type="application",
         supported_adapters=inherit_supported_adapters("nonebot_plugin_alconna"),
