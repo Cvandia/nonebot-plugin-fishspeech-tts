@@ -10,3 +10,4 @@ repos:
     hooks:
       - id: black
         stages: [commit]
+        
