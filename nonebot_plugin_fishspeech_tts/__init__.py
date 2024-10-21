@@ -48,7 +48,7 @@ def check_is_to_me() -> Rule | None:
         return None
 
 
-tts_handler = on_regex(r"(.+)说([\s\S]*)", rule=check_is_to_me(), block=False)
+tts_handler = on_regex(r"(.+?)说([\s\S]*)", rule=check_is_to_me(), block=False)
 speaker_list = on_command(
     "语音列表", aliases={"语音角色列表"}, block=True, rule=to_me()
 )
