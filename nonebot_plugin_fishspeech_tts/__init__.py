@@ -20,7 +20,7 @@ is_online = config.tts_is_online
 chunk_length_map = {
     "normal": ChunkLength.NORMAL,
     "short": ChunkLength.SHORT,
-    "long": ChunkLength.LONG
+    "long": ChunkLength.LONG,
 }
 
 chunk_length = chunk_length_map.get(config.tts_chunk_length, ChunkLength.NORMAL)
@@ -49,8 +49,10 @@ def check_is_to_me() -> Rule | None:
 
 
 tts_handler = on_regex(r"(.+)说([\s\S]*)", rule=check_is_to_me(), block=False)
-speaker_list = on_command("语音列表", block=False)
-balance = on_command("语音余额", block=False)
+speaker_list = on_command(
+    "语音列表", aliases={"语音角色列表"}, block=True, rule=to_me()
+)
+balance = on_command("语音余额", block=True, rule=to_me())
 
 
 @tts_handler.handle()
@@ -93,9 +95,9 @@ async def speaker_list_handle(event: Event):
         if is_online:
             await speaker_list.send("具体见官网:https://fish.audio/zh-CN/")
         else:
-            await speaker_list.send("正在获取本地发音人列表, 请稍等")
+            await speaker_list.send("正在获取本地语音角色列表, 请稍等")
             speakers = fish_speech_api.get_speaker_list()
-            await speaker_list.send("发音人列表: " + ", ".join(speakers))
+            await speaker_list.send("语音角色列表: " + ", ".join(speakers))
     except APIException as e:
         await speaker_list.finish(str(e))
 
@@ -104,10 +106,10 @@ async def speaker_list_handle(event: Event):
 async def balance_handle(event: Event):
     try:
         if is_online:
-            await balance.send("正在获取在线语音余额, 请稍等")
+            await balance.send("正在查询在线语音余额, 请稍等")
             balance_float = await fish_audio_api.get_balance()
             await balance.finish(f"语音余额为: {balance_float}")
         else:
-            await balance.finish("本地api无法获取余额")
+            await balance.finish("本地api无法查询余额")
     except APIException as e:
         await balance.finish(str(e))
