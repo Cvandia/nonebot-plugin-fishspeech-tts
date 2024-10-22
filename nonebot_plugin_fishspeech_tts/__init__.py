@@ -8,9 +8,10 @@ from nonebot import require
 require("nonebot_plugin_alconna")
 
 from nonebot_plugin_alconna import UniMessage, Reply, UniMsg, Text
-from .fish_audio_api import fish_audio_api, ChunkLength
+from .fish_audio_api import fish_audio_api
 from .fish_speech_api import fish_speech_api
 from .exception import APIException
+from .request_params import ChunkLength
 from .config import config, Config
 import contextlib
 
@@ -76,7 +77,10 @@ async def tts_handle(message: UniMsg, match: tuple = RegexGroup()):
     try:
         if is_online:
             await tts_handler.send("正在通过在线api合成语音, 请稍等")
-            audio = await fish_audio_api.generate_tts(text, speaker, chunk_length)
+            request = await fish_audio_api.generate_servettsrequest(
+                text, speaker, chunk_length
+            )
+            audio = await fish_audio_api.generate_tts(request)
             await UniMessage.voice(raw=audio).finish()
         else:
             await tts_handler.send("正在通过本地api合成语音, 请稍等")
@@ -93,11 +97,11 @@ async def tts_handle(message: UniMsg, match: tuple = RegexGroup()):
 async def speaker_list_handle(event: Event):
     try:
         if is_online:
-            await speaker_list.send("具体见官网:https://fish.audio/zh-CN/")
+            _list = fish_audio_api.get_speaker_list()
+            await speaker_list.finish("语音角色列表: " + ", ".join(_list))
         else:
-            await speaker_list.send("正在获取本地语音角色列表, 请稍等")
-            speakers = fish_speech_api.get_speaker_list()
-            await speaker_list.send("语音角色列表: " + ", ".join(speakers))
+            _list = fish_speech_api.get_speaker_list()
+            await speaker_list.finish("语音角色列表: " + ", ".join(_list))
     except APIException as e:
         await speaker_list.finish(str(e))
 

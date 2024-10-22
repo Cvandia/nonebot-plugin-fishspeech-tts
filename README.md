@@ -69,19 +69,36 @@ git clone https://github.com/Cvandia/nonebot-plugin-fishspeech-tts
 
 ## ⚙️ 配置
 
-**在env.中添加以下配置**
+**在.env中添加以下配置**
 
-| 配置 | 类型 |必填项| 默认值 | 说明 |
+| 基础配置 | 类型 |必填项| 默认值 | 说明 |
 |:-----:|:----:|:----:|:---:|:----:|
 |tts_is_online|bool|是|True|是否使用云端api|
-|tts_is_to_me|bool|是|True|是否需要at触发(防止误触)|
-|online_authorization|str|依据第一个配置项|"xxxx"|fish-audio 后端api鉴权，详见[链接](https://fish.audio/zh-CN/go-api/api-keys/)||
-|tts_api_url|str|依据第一个配置项|"http://127.0.0.1:8080"|离线或自定义api地址
-|tts_audio_path|str|依据第一个配置项|"./data/参考音频"|合成角色语音路劲|
 |tts_chunk_length|literal|否|"normal"|请求时音频分片长度，默认为normal，可选：short, normal, long|
+|tts_is_to_me|bool|否|True|是否仅当被@时回复|
+|tts_audio_path|str|否|"./data/参考音频"|语音素材路径，默认为"./data/参考音频"|
 
-**注：参考音频的文件名格式为：［角色名］音频对应的文字标签.wav**
-**支持同一角色的不同语音**
+**注：参考音频的文件名格式为：［角色名］音频对应的文字标签.[音频后缀名]**
+
+**! 支持同一角色的不同语音 !**
+
+**音频后缀目前支持有详见[files.py](./nonebot_plugin_fishspeech_tts/files.py)中的`AUDIO_FILE_SUFFIX`**
+___
+
+如果你想使用官方的api，请将配置项`tts_is_online`设置为`True`并配置以下
+
+| 配置项 | 类型 | 必填项 | 默认值 | 说明 |
+|:-----:|:----:|:----:|:---:|:----:|
+|online_authorization|str|是|"xxxxx"|官网api鉴权秘钥，详见[链接](https://fish.audio/zh-CN/go-api/api-keys/)|
+|online_model_first|bool|否|True|如果你想调用官方模型，通过自己的参考音频，定制角色音色，将此项设为`False`。当然，如果你没有准备参考音频，也是会调用官网已经有的音色，具体详见[链接](https://fish.audio/zh-CN/)|
+
+---
+
+如果你想使用[自搭](#离线搭建fish-speech)或者其他的[fish-speech](https://github.com/fishaudio/fish-speech)项目的api,请将配置项`tts_is_online`设置为`Fasle`并配置以下
+
+| 配置项 | 类型 | 必填项 | 默认值 | 说明 |
+|:----:|:----:|:----:|:---:|:----:|
+|offline_api_url|str|是|"http://127.0.0.1:8080"|你的`fish-speech`api地址|
 
 ## ⭐ 使用
 
