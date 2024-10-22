@@ -46,7 +46,10 @@ class FishSpeechAPI:
         """
 
         references = []
-        speaker_audio_path = get_speaker_audio_path(self.path_audio, speaker_name)
+        try:
+            speaker_audio_path = get_speaker_audio_path(self.path_audio, speaker_name)
+        except FileHandleException as e:
+            raise APIException(str(e))
         for audio in speaker_audio_path:
             audio_bytes = audio.read_bytes()
             ref_text = extract_text_by_filename(audio.name)
