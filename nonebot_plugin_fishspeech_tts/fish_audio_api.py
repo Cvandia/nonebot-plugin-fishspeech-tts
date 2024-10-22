@@ -152,7 +152,7 @@ class FishAudioAPI:
                     response = await client.post(
                         self.url,
                         headers=self.headers,
-                        json=request.model_dump(),
+                        json=request.dict(),
                         timeout=60,
                     )
                     return response.content
