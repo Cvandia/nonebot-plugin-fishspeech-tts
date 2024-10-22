@@ -89,7 +89,7 @@ async def tts_handle(message: UniMsg, match: tuple = RegexGroup()):
             )
             audio = await fish_speech_api.generate_tts(request)
             await UniMessage.voice(raw=audio).finish()
-    except (APIException, FileNotFoundError, ValueError, NotADirectoryError) as e:
+    except APIException as e:
         await tts_handler.finish(str(e))
 
 
