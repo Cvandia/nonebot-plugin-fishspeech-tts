@@ -32,7 +32,7 @@ with contextlib.suppress(Exception):
 
     __plugin_meta__ = PluginMetadata(
         name="FishSpeechTTS",
-        description="一个插件,通过调用在线或本地api发送TTS语音",
+        description="小样本TTS,通过fish-speech调用本地或在线api发送语音",
         usage="发送:[发音人]说[文本]即可发送TTS语音",
         homepage="https://github.com/Cvandia/nonebot-plugin-fishspeech-tts",
         config=Config,
