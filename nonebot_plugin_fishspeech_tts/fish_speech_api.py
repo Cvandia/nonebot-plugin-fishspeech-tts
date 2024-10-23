@@ -1,9 +1,8 @@
 from nonebot.log import logger
 from pathlib import Path
-from httpx import TimeoutException
 from .fish_audio_api import ChunkLength
 from .config import config
-from .exception import APIException, FileHandleException
+from .exception import APIException, FileHandleException, HTTPException
 from .request_params import ServeReferenceAudio, ServeTTSRequest
 from .files import (
     extract_text_by_filename,
@@ -90,7 +89,7 @@ class FishSpeechAPI:
                     timeout=120,
                 )
                 return response.content
-        except TimeoutException as e:
+        except HTTPException as e:
             logger.error(f"获取TTS音频失败: {e}")
             raise APIException("获取TTS音频超时, 你的文本太长啦！")
         except Exception:

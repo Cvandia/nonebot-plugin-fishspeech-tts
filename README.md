@@ -18,7 +18,9 @@ _⭐文本生成语音`tts`插件⭐_
 ## ⭐ 介绍
 
 **仅需一条5秒语音素材，就可~~完美~~优秀克隆素材本音呐！**
-你只需要准备好你想克隆的角色语音，并对其语音进行文件名的标注(见下文)，就可以快速生成语音。或者使用官方在线api -> [fish-audio](https://fish.audio/zh-CN/)即可享受快速云端的语音生成。
+只需要准备好你想克隆的角色语音，并对其语音进行文件名的标注(见下文)，就可以快速生成语音。
+
+> 或者使用官方在线api -> [fish-audio](https://fish.audio/zh-CN/)即可享受快速云端的语音生成。
 
 ## 📜 免责声明
 
@@ -90,7 +92,7 @@ ___
 | 配置项 | 类型 | 必填项 | 默认值 | 说明 |
 |:-----:|:----:|:----:|:---:|:----:|
 |online_authorization|str|是|"xxxxx"|官网api鉴权秘钥，详见[链接](https://fish.audio/zh-CN/go-api/api-keys/)|
-|online_model_first|bool|否|True|如果你想调用官方模型，通过自己的参考音频，定制角色音色，将此项设为`False`。当然，如果你没有准备参考音频，也是会调用官网已经有的音色，具体详见[链接](https://fish.audio/zh-CN/)|
+|online_model_first|bool|否|True|如果你想调用官方模型，通过自己的参考音频，定制角色音色，将此项设为`False`。当然，如果你没有准备参考音频，也会调用官网已经有的音色，具体详见[链接](https://fish.audio/zh-CN/)|
 
 ---
 
@@ -126,23 +128,28 @@ ___
 
 ## ⭐ 额外帮助
 
-### 离线搭建`fish-speech`
+### 离线搭建简略教程
+
+**准备`fish-speech`**
 - 1.将`fish-speech` 仓库 `git clone` 至本地
+```bash
+
+git clone https://github.com/fishaudio/fish-speech
+```
 - 2.运行`install_env.bat`安装虚拟环境以及所需依赖
 - 3.运行`start.bat`初次启动
 - 4.修改`API_FLAGS.txt`后再次启动即可
 
-### `启动API服务`
+**启动API服务**
 
-- 1.修改`API_FLAGS.txt`大致为，即取消`api`前面的`#`号
+- 1.修改`API_FLAGS.txt`大致为以下内容，即取消`api`前面的`#`号
 ```
 # --infer
 --api
 --listen 0.0.0.0:8080 \ #监听接口
 ...
-
 ```
-### 在`API_FLAGS.txt`里添加额外参数
+**在`API_FLAGS.txt`里添加额外参数**
 - 1.`--complie` ->是否启动编译后的模型 (更快的生成tts，但启动较慢)
 - 2.`--workers 数字` ->启动`数字`个多协程 (请务必设置，因为默认一个容易阻塞)
 - 3.更多参考[官方文档](https://speech.fish.audio/zh)
