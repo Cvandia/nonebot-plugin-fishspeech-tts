@@ -7,13 +7,13 @@
 _⭐基于Nonebot2的调用在线[fish-audio](https://fish.audio/zh-CN/)或离线[fish-speech](https://github.com/fishaudio/fish-speech) api⭐_
 _⭐文本生成语音`tts`插件⭐_
 
-
-</div>
-
-<div align="center">
 <a href="https://www.python.org/downloads/release/python-390/"><img src="https://img.shields.io/badge/python-3.10+-blue"></a>  <a href=""><img src="https://img.shields.io/badge/QQ-1141538825-yellow"></a> <a href="https://github.com/Cvandia/nonebot-plugin-game-torrent/blob/main/LICENCE"><img src="https://img.shields.io/badge/license-MIT-blue"></a> <a href="https://v2.nonebot.dev/"><img src="https://img.shields.io/badge/Nonebot2-2.2.0+-red"></a>
+
+**中文简体** | [**English**](./docs/README_EN.md)
+
 </div>
 
+---
 
 ## ⭐ 介绍
 
@@ -36,13 +36,13 @@ _⭐文本生成语音`tts`插件⭐_
 
 `pipx` 安装
 
-```
+```bash
 pipx install nonebot-plugin-fishspeech-tts -U
 ```
 > [!note] 在nonebot的pyproject.toml中的plugins = ["xxx"]添加此插件
 
 `nb-cli`安装
-```
+```bash
 nb plugin install nonebot-plugin-fishspeech-tts -U
 ```
 
