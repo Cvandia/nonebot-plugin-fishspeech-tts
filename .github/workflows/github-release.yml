@@ -22,5 +22,10 @@ jobs:
               with:
                 tag_name: ${{ github.ref }}
                 release_name: Release ${{ github.ref }}
-                draft: false
+                # 修改发布说明为最新提交的提交信息
+                body: |
+                    ${{ github.event.head_commit.message }} # 使用最新提交的提交信息作为发布说明
+                    ${{ github.event.head_commit.url }} # 提供提交的链接
+                    ${{ github.event.head_commit.author.name }} # 提供提交的作者
+                draft: false 
                 prerelease: false
