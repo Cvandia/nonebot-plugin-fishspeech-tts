@@ -26,6 +26,12 @@ chunk_length_map = {
 
 chunk_length = chunk_length_map.get(config.tts_chunk_length, ChunkLength.NORMAL)
 
+usage: str = """
+指令：
+    发送:[发音人]说[文本]即可发送TTS语音。
+    发送:[语音列表]以查看支持的发音人。
+    发送:[语音余额]以查看在线api余额。
+""".strip()
 
 with contextlib.suppress(Exception):
     from nonebot.plugin import PluginMetadata, inherit_supported_adapters
@@ -33,7 +39,7 @@ with contextlib.suppress(Exception):
     __plugin_meta__ = PluginMetadata(
         name="FishSpeechTTS",
         description="小样本TTS,通过fish-speech调用本地或在线api发送语音",
-        usage="发送:[发音人]说[文本]即可发送TTS语音",
+        usage=usage,
         homepage="https://github.com/Cvandia/nonebot-plugin-fishspeech-tts",
         config=Config,
         type="application",
