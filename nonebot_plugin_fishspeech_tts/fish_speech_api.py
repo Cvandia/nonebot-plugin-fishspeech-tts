@@ -1,9 +1,8 @@
 from nonebot.log import logger
 from pathlib import Path
-from .fish_audio_api import ChunkLength
 from .config import config
 from .exception import APIException, FileHandleException, HTTPException
-from .request_params import ServeReferenceAudio, ServeTTSRequest
+from .request_params import ServeReferenceAudio, ServeTTSRequest, ChunkLength
 from .files import (
     extract_text_by_filename,
     get_speaker_audio_path,
@@ -106,6 +105,3 @@ class FishSpeechAPI:
             return get_path_speaker_list(self.path_audio)
         except FileHandleException as e:
             raise APIException(str(e))
-
-
-fish_speech_api = FishSpeechAPI()

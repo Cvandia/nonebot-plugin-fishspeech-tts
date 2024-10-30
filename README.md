@@ -115,8 +115,9 @@ ___
 |语音列表|是|all|获取所有角色列表|all|
 |语音余额|是|all|查询api余额|all|
 
-## 🌙 未来
- - 暂无规划
+## 🌙 Todo
+ - [x] 添加更多配置项
+ - [ ] 暂无计划
 
 <center>喜欢记得点个star⭐</center>
 
@@ -128,7 +129,7 @@ ___
 
 ## ⭐ 额外帮助
 
-### 离线搭建简略教程
+### windows离线搭建简略教程
 
 **准备`fish-speech`**
 - 1.将`fish-speech` 仓库 `git clone` 至本地
@@ -152,5 +153,6 @@ git clone https://github.com/fishaudio/fish-speech
 **在`API_FLAGS.txt`里添加额外参数**
 - 1.`--complie` ->是否启动编译后的模型 (更快的生成tts，但启动较慢)
 - 2.`--workers 数字` ->启动`数字`个多协程 (请务必设置，因为默认一个容易阻塞)
-- 3.更多参考[官方文档](https://speech.fish.audio/zh)
 
+### linux离线搭建fish-speech
+- 更多参考[官方文档](https://speech.fish.audio/zh)

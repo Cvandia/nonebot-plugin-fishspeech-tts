@@ -185,6 +185,3 @@ class FishAudioAPI:
                 return get_path_speaker_list(self.path_audio)
         except FileHandleException as e:
             raise APIException(str(e))
-
-
-fish_audio_api = FishAudioAPI()

@@ -1,8 +1,8 @@
 [tool.poetry]
 name = "nonebot-plugin-fishspeech-tts"
-version = "0.2.5"
+version = "0.2.6"
 description = "小样本TTS,通过调用在线或本地api发送TTS语音"
-authors = ["divandia <106718176+Cvandia@users.noreply.github.com>"]
+authors = ["Cvandia <106718176+Cvandia@users.noreply.github.com>"]
 license = "MIT"
 readme = "README.md"
 packages = [{include = "nonebot_plugin_fishspeech_tts"}]
