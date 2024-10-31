@@ -3,7 +3,7 @@ on:
     push:
         tags:
         - 'v*' # 匹配"v1.0.0"、"v1.0.0-alpha"等发布标签
-        branches: ['master']
+        
 permissions:
     contents: write  # 如果您的包发布到 GitHub Packages，则需要此权限
     packages: write  # 如果您的包发布到 GitHub Packages，则需要此权限
@@ -24,8 +24,7 @@ jobs:
                 release_name: Release ${{ github.ref }}
                 # 修改发布说明为最新提交的提交信息
                 body: |
-                    ${{ github.event.head_commit.message }} # 使用最新提交的提交信息作为发布说明
-                    ${{ github.event.head_commit.url }} # 提供提交的链接
-                    ${{ github.event.head_commit.author.name }} # 提供提交的作者
-                draft: false 
+                    最新提交: ${{ github.event.head_commit.message }}
+                    链接: ${{ github.event.head_commit.url }}
+                    作者: ${{ github.event.head_commit.author.name }}
                 prerelease: false
