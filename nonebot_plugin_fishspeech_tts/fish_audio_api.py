@@ -140,6 +140,7 @@ class FishAudioAPI:
                         content=ormsgpack.packb(
                             request, option=ormsgpack.OPT_SERIALIZE_PYDANTIC
                         ),
+                        timeout=60,
                     ) as resp:
                         return await resp.aread()
             except HTTPException as e:
