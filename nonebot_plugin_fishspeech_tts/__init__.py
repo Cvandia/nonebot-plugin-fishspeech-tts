@@ -27,12 +27,14 @@ chunk_length_map = {
 
 chunk_length = chunk_length_map.get(config.tts_chunk_length, ChunkLength.NORMAL)
 
-usage: str = """
+usage: str = (
+    """
 指令：
     发送:[发音人]说[文本]即可发送TTS语音。
     发送:[语音列表]以查看支持的发音人。
     发送:[语音余额]以查看在线api余额。
 """.strip()
+)
 
 with contextlib.suppress(Exception):
     from nonebot.plugin import PluginMetadata, inherit_supported_adapters
@@ -62,9 +64,9 @@ async def dynamic_speaker_rule(event: Event) -> bool:
         speakers = fish_audio_api.get_speaker_list()
     else:
         speakers = fish_speech_api.get_speaker_list()
-    
+
     for speaker in speakers:
-        if re.match(f'{speaker}说([\s\S]*)', msg):
+        if re.match(f"{speaker}说([\s\S]*)", msg):
             return True
     return False
 
@@ -107,7 +109,7 @@ async def tts_handle(message: UniMsg):
             )
             audio = await fish_speech_api.generate_tts(request)
         await UniMessage.voice(raw=audio).finish()
-        
+
     except APIException as e:
         await tts_handler.finish(str(e))
 
