@@ -66,7 +66,7 @@ class FishAudioAPI:
         """
         request_api = "https://api.fish.audio/model"
         async with AsyncClient() as client:
-            params = {"title": speaker}
+            params = {"title": speaker, "sort_by": "task_count"}
             response = await client.get(
                 request_api, params=params, headers=self.headers
             )
