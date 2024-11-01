@@ -82,6 +82,8 @@ git clone https://github.com/Cvandia/nonebot-plugin-fishspeech-tts
 
 **注：参考音频的文件名格式为：［角色名］音频对应的文字标签.[音频后缀名]**
 
+点击[这里](./res/reference_audio/)下载本人参考音频，并放入`data/参考音频`文件夹下
+
 **! 支持同一角色的不同语音 !**
 
 **音频后缀目前支持有详见[files.py](./nonebot_plugin_fishspeech_tts/files.py)中的`AUDIO_FILE_SUFFIX`**
