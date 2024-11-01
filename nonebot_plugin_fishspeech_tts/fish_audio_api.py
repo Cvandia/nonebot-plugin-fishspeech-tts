@@ -196,12 +196,10 @@ class FishAudioAPI:
         """
         获取语音角色列表
         """
-        try:
-            if is_reference_id_first:
-                return_list = ["请查看官网了解更多: https://fish.audio/zh-CN/"]
+        return_list = ["请查看官网了解更多: https://fish.audio/zh-CN/"]
+        if is_reference_id_first:
+            try:
                 return_list.extend(get_path_speaker_list(self.path_audio))
-                return return_list
-            else:
-                return get_path_speaker_list(self.path_audio)
-        except FileHandleException as e:
-            raise APIException(str(e))
+            except FileHandleException:
+                logger.warning("音频文件夹不存在或无法读取")
+        return return_list
