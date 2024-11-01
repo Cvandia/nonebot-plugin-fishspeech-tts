@@ -74,7 +74,10 @@ class FishAudioAPI:
             if resp_data["total"] == 0:
                 raise APIException("获取语音角色列表为空")
             else:
-                return resp_data["items"][0]["_id"]
+                for item in resp_data["items"]:
+                    if speaker in item["title"]:
+                        return item["_id"]
+                raise APIException("未找到对应的角色")
 
     async def generate_servettsrequest(
         self,
