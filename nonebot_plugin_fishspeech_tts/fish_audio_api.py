@@ -1,5 +1,12 @@
 from .config import config
-from httpx import AsyncClient
+from httpx import (
+    AsyncClient,
+    ReadTimeout,
+    ConnectTimeout,
+    ConnectError,
+    RequestError,
+    HTTPStatusError,
+)
 from .exception import (
     APIException,
     AuthorizationException,
@@ -142,9 +149,15 @@ class FishAudioAPI:
                         ),
                     ) as resp:
                         return await resp.aread()
-            except HTTPException as e:
+            except (
+                ReadTimeout,
+                ConnectTimeout,
+                ConnectError,
+                RequestError,
+                HTTPStatusError,
+            ) as e:
                 logger.error(f"获取TTS音频失败: {e}")
-                raise APIException("网络错误, 请检查网络连接")
+                raise HTTPException("网络错误, 请检查网络连接")
         else:
             self.headers["content-type"] = "application/json"
             try:
@@ -156,9 +169,15 @@ class FishAudioAPI:
                         timeout=60,
                     )
                     return response.content
-            except HTTPException as e:
+            except (
+                ReadTimeout,
+                ConnectTimeout,
+                ConnectError,
+                RequestError,
+                HTTPStatusError,
+            ) as e:
                 logger.error(f"获取TTS音频失败: {e}")
-                raise APIException("网络错误, 请检查网络连接")
+                raise HTTPException("网络错误, 请检查网络连接")
 
     async def get_balance(self) -> float:
         """
