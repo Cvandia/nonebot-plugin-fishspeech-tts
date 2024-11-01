@@ -65,19 +65,20 @@ class FishAudioAPI:
             APIException: 获取语音角色列表为空
         """
         request_api = "https://api.fish.audio/model"
+        sort_options = ["score", "task_count", "created_at"]
         async with AsyncClient() as client:
-            params = {"title": speaker, "sort_by": "task_count"}
-            response = await client.get(
-                request_api, params=params, headers=self.headers
-            )
-            resp_data = response.json()
-            if resp_data["total"] == 0:
-                raise APIException("获取语音角色列表为空")
-            else:
+            for sort_by in sort_options:
+                params = {"title": speaker, "sort_by": sort_by}
+                response = await client.get(
+                    request_api, params=params, headers=self.headers
+                )
+                resp_data = response.json()
+                if resp_data["total"] == 0:
+                    continue
                 for item in resp_data["items"]:
                     if speaker in item["title"]:
                         return item["_id"]
-                raise APIException("未找到对应的角色")
+        raise APIException("未找到对应的角色")
 
     async def generate_servettsrequest(
         self,
