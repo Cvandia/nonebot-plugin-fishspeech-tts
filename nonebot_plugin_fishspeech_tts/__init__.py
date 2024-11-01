@@ -1,5 +1,4 @@
-from nonebot.plugin import on_regex, on_command, on_message
-from nonebot.params import RegexGroup
+from nonebot.plugin import on_regex, on_command
 from nonebot.adapters import Event, Message
 from nonebot.rule import to_me, Rule
 
@@ -14,7 +13,6 @@ from .exception import APIException
 from .request_params import ChunkLength
 from .config import config, Config
 import contextlib
-import re
 
 
 is_online = config.tts_is_online
@@ -30,7 +28,7 @@ chunk_length = chunk_length_map.get(config.tts_chunk_length, ChunkLength.NORMAL)
 usage: str = (
     """
 指令：
-    发送:[发音人]说[文本]即可发送TTS语音。
+    发送:[角色名]说[文本]即可发送TTS语音。
     发送:[语音列表]以查看支持的发音人。
     发送:[语音余额]以查看在线api余额。
 """.strip()
@@ -58,20 +56,7 @@ def check_is_to_me() -> Rule | None:
         return None
 
 
-async def dynamic_speaker_rule(event: Event) -> bool:
-    msg = str(event.get_message()).strip()
-    if is_online:
-        speakers = fish_audio_api.get_speaker_list()
-    else:
-        speakers = fish_speech_api.get_speaker_list()
-
-    for speaker in speakers:
-        if re.match(f"{speaker}说([\s\S]*)", msg):
-            return True
-    return False
-
-
-tts_handler = on_message(rule=Rule(dynamic_speaker_rule) & check_is_to_me(), block=True)
+tts_handler = on_regex(r"(.+?)说([\s\S]*)", rule=check_is_to_me(), block=True)
 speaker_list = on_command(
     "语音列表", aliases={"语音角色列表"}, block=True, rule=to_me()
 )

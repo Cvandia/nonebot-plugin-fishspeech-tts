@@ -1,12 +1,3 @@
-from httpx import (
-    ReadTimeout,
-    ConnectTimeout,
-    ConnectError,
-    RequestError,
-    HTTPStatusError,
-)
-
-
 class APIException(Exception):
     """API异常类"""
 
@@ -25,9 +16,7 @@ class FileHandleException(Exception):
     pass
 
 
-class HTTPException(
-    ReadTimeout, ConnectTimeout, ConnectError, RequestError, HTTPStatusError
-):
+class HTTPException(APIException):
     """HTTP异常类"""
 
     pass

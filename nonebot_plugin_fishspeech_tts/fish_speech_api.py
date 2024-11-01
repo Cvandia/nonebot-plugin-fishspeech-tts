@@ -1,3 +1,11 @@
+from httpx import (
+    AsyncClient,
+    ConnectError,
+    ConnectTimeout,
+    HTTPStatusError,
+    RequestError,
+    ReadTimeout,
+)
 from nonebot.log import logger
 from pathlib import Path
 from .config import config
@@ -9,7 +17,6 @@ from .files import (
     get_path_speaker_list,
 )
 import ormsgpack
-import httpx
 
 
 class FishSpeechAPI:
@@ -78,7 +85,7 @@ class FishSpeechAPI:
             bytes: TTS音频二进制数据
         """
         try:
-            async with httpx.AsyncClient() as client:
+            async with AsyncClient() as client:
                 response = await client.post(
                     self.api_url,
                     headers=self.headers,
@@ -88,9 +95,15 @@ class FishSpeechAPI:
                     timeout=120,
                 )
                 return response.content
-        except HTTPException as e:
+        except (
+            ReadTimeout,
+            ConnectTimeout,
+            ConnectError,
+            RequestError,
+            HTTPStatusError,
+        ) as e:
             logger.error(f"获取TTS音频失败: {e}")
-            raise APIException("获取TTS音频超时, 你的文本太长啦！")
+            raise HTTPException("获取TTS音频超时, 你的文本太长啦！")
         except Exception:
             raise APIException("获取TTS音频失败, 检查API后端")
 
