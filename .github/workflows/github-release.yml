@@ -23,6 +23,11 @@ jobs:
                 echo "COMMIT_URL=$(git log -1 --pretty=%H)" >> $GITHUB_OUTPUT
                 echo "COMMIT_AUTHOR=$(git log -1 --pretty=%an)" >> $GITHUB_OUTPUT
 
+            - name: Generate tag name
+              id: generate_tag_name
+              run: |
+                echo "TAG_NAME=v$(date +'%Y.%m.%d-%H.%M.%S')" >> $GITHUB_OUTPUT
+
             - name: Compress reference_audio folder
               run: |
                 zip -r reference_audio.zip res/reference_audio
@@ -33,8 +38,8 @@ jobs:
               env:
                 GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
               with:
-                tag_name: ${{ github.sha }}
-                release_name: Release ${{ github.sha }}
+                tag_name: ${{ steps.generate_tag_name.outputs.TAG_NAME }}
+                release_name: Release ${{ steps.generate_tag_name.outputs.TAG_NAME }}
                 body: |
                     最新提交: ${{ steps.get_commit_info.outputs.COMMIT_MESSAGE }}
                     链接: https://github.com/${{ github.repository }}/commit/${{ steps.get_commit_info.outputs.COMMIT_URL }}
