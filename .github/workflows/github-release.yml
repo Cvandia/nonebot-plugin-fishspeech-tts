@@ -1,12 +1,13 @@
 name: Release to GitHub
 on:
     push:
-        tags:
-        - 'v*' # 匹配"v1.0.0"、"v1.0.0-alpha"等发布标签
-        
+        paths:
+        - 'res/reference_audio/**' # Trigger on changes in the reference_audio folder
+
 permissions:
-    contents: write  # 如果您的包发布到 GitHub Packages，则需要此权限
-    packages: write  # 如果您的包发布到 GitHub Packages，则需要此权限
+    contents: write
+    packages: write
+
 jobs:
     build:
         name: Create Release
@@ -14,17 +15,38 @@ jobs:
         steps:
             - name: Checkout code
               uses: actions/checkout@v2
+
+            - name: Get latest commit info
+              id: get_commit_info
+              run: |
+                echo "COMMIT_MESSAGE=$(git log -1 --pretty=%B)" >> $GITHUB_OUTPUT
+                echo "COMMIT_URL=$(git log -1 --pretty=%H)" >> $GITHUB_OUTPUT
+                echo "COMMIT_AUTHOR=$(git log -1 --pretty=%an)" >> $GITHUB_OUTPUT
+
+            - name: Compress reference_audio folder
+              run: |
+                zip -r reference_audio.zip res/reference_audio
+
             - name: Create Release
               id: create_release
               uses: actions/create-release@v1
               env:
-                GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # This token is provided by Actions, you do not need to create your own token
+                GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
               with:
-                tag_name: ${{ github.ref }}
-                release_name: Release ${{ github.ref }}
-                # 修改发布说明为最新提交的提交信息
+                tag_name: ${{ github.sha }}
+                release_name: Release ${{ github.sha }}
                 body: |
-                    最新提交: ${{ github.event.head_commit.message }}
-                    链接: ${{ github.event.head_commit.url }}
-                    作者: ${{ github.event.head_commit.author.name }}
+                    最新提交: ${{ steps.get_commit_info.outputs.COMMIT_MESSAGE }}
+                    链接: https://github.com/${{ github.repository }}/commit/${{ steps.get_commit_info.outputs.COMMIT_URL }}
+                    作者: ${{ steps.get_commit_info.outputs.COMMIT_AUTHOR }}
                 prerelease: false
+
+            - name: Upload release asset
+              uses: actions/upload-release-asset@v1
+              env:
+                GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+              with:
+                upload_url: ${{ steps.create_release.outputs.upload_url }}
+                asset_path: ./reference_audio.zip
+                asset_name: reference_audio.zip
+                asset_content_type: application/zip
