@@ -1,3 +1,8 @@
+"""
+自定义异常类
+"""
+
+
 class APIException(Exception):
     """API异常类"""
 

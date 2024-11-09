@@ -4,6 +4,10 @@ from .exception import FileHandleException
 import re
 
 
+"""
+用于文件处理的工具函数
+"""
+
 # 音频文件后缀
 AUDIO_FILE_SUFFIX = [
     ".mp3",

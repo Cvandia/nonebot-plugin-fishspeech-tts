@@ -23,6 +23,10 @@ from nonebot.log import logger
 from pathlib import Path
 import ormsgpack
 
+"""
+用于 FishAudio 的API接口调用
+"""
+
 
 is_reference_id_first = config.online_model_first
 
