@@ -1,9 +1,12 @@
-name: Release to GitHub
+name: Release reference_audio to GitHub
 on:
     push:
         paths:
-          # Trigger on changes in the reference_audio folder
           - 'res/reference_audio/**'
+        branches:
+          - master
+        tags-ignore:
+          - '*' # Ignore tags
 
 permissions:
     contents: write
