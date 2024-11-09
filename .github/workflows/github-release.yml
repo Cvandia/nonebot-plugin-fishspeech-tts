@@ -15,7 +15,7 @@ jobs:
         runs-on: ubuntu-latest
         steps:
             - name: Checkout code
-              uses: actions/checkout@v4
+              uses: actions/checkout@v2
 
             - name: Get latest commit info
               id: get_commit_info
@@ -35,7 +35,7 @@ jobs:
 
             - name: Create Release
               id: create_release
-              uses: actions/create-release@v1.1.4
+              uses: actions/create-release@v1
               env:
                 GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
               with:
