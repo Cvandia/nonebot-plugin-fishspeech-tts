@@ -78,7 +78,7 @@ git clone https://github.com/Cvandia/nonebot-plugin-fishspeech-tts
 |  tts_is_online   |  bool   |   是   |       True        |                       是否使用云端api                       |
 | tts_chunk_length | literal |   否   |     "normal"      | 请求时音频分片长度，默认为normal，可选：short, normal, long |
 |  tts_audio_path  |   str   |   否   | "./data/参考音频" |            语音素材路径，默认为"./data/参考音频"            |
-|    tts_prefix    |   str   |   否   |       None        |                  语音素材前缀，默认为None                   |
+|    tts_prefix    |   str   |   否   |       None        |                  触发前缀，默认为None                   |
 
 **注：参考音频的文件名格式为：［角色名］音频对应的文字标签.[音频后缀名]**
 
