@@ -2,7 +2,8 @@ name: Release to GitHub
 on:
     push:
         paths:
-        - 'res/reference_audio/**' # Trigger on changes in the reference_audio folder
+          # Trigger on changes in the reference_audio folder
+          - 'res/reference_audio/**'
 
 permissions:
     contents: write
@@ -14,7 +15,7 @@ jobs:
         runs-on: ubuntu-latest
         steps:
             - name: Checkout code
-              uses: actions/checkout@v2
+              uses: actions/checkout@v4
 
             - name: Get latest commit info
               id: get_commit_info
@@ -34,7 +35,7 @@ jobs:
 
             - name: Create Release
               id: create_release
-              uses: actions/create-release@v1
+              uses: actions/create-release@v1.1.4
               env:
                 GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
               with:
@@ -47,7 +48,7 @@ jobs:
                 prerelease: false
 
             - name: Upload release asset
-              uses: actions/upload-release-asset@v1
+              uses: actions/upload-release-asset@v1.0.2
               env:
                 GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
               with:
