@@ -20,15 +20,13 @@ jobs:
             - name: Get latest commit info
               id: get_commit_info
               run: |
-                echo "COMMIT_MESSAGE=$(git log -1 --pretty=%B)" >> $GITHUB_ENV
-                echo "COMMIT_URL=$(git log -1 --pretty=%H)" >> $GITHUB_ENV
-                echo "COMMIT_AUTHOR=$(git log -1 --pretty=%an)" >> $GITHUB_ENV
-
+                echo "COMMIT_MESSAGE=$(git log -1 --pretty=%B)" >> $GITHUB_OUTPUT
+                echo "COMMIT_URL=$(git log -1 --pretty=%H)" >> $GITHUB_OUTPUT
+                echo "COMMIT_AUTHOR=$(git log -1 --pretty=%an)" >> $GITHUB_OUTPUT
             - name: Generate tag name
               id: generate_tag_name
               run: |
-                echo "TAG_NAME=v$(date +'%Y.%m.%d-%H.%M.%S')" >> $GITHUB_ENV
-
+                echo "TAG_NAME=v$(date +'%Y.%m.%d-%H.%M.%S')" >> $GITHUB_OUTPUT
             - name: Compress reference_audio folder
               run: |
                 zip -r reference_audio.zip res/reference_audio
@@ -48,7 +46,7 @@ jobs:
                 prerelease: false
 
             - name: Upload release asset
-              uses: actions/upload-release-asset@v1.0.2
+              uses: actions/upload-release-asset@v1
               env:
                 GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
               with:
