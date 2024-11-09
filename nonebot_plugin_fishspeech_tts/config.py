@@ -13,6 +13,7 @@ class Config(BaseModel):
     tts_is_online: bool = True
     tts_chunk_length: Literal["normal", "short", "long"] = "normal"
     tts_audio_path: str = "./data/参考音频"
+    tts_prefix: Optional[str] = None
 
     # 区分配置
     online_authorization: Optional[str] = "xxxxx"

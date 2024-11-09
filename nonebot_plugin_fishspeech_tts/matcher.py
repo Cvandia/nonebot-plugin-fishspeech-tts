@@ -14,22 +14,25 @@ from .config import config
 """
 
 
-IS_ONLINE = config.tts_is_online  # True 为在线模式，False 为本地模式
-PREFIX = list(get_driver().config.command_start)[0]  # 命令前缀
+is_online = config.tts_is_online  # True 为在线模式，False 为本地模式
+prefix = (
+    config.tts_prefix
+    if config.tts_prefix
+    else list(get_driver().config.command_start)[0]
+)  # 命令前缀
 
-
-chunk_length_map = {
+CHUNKLENGTH_MAP = {
     "normal": ChunkLength.NORMAL,
     "short": ChunkLength.SHORT,
     "long": ChunkLength.LONG,
 }
 
-CHUNKLENGTH = chunk_length_map.get(
+chunk_length = CHUNKLENGTH_MAP.get(
     config.tts_chunk_length, ChunkLength.NORMAL
 )  # 请求语音长度
 
 
-tts_handler = on_regex(rf"^{PREFIX}(.+?)说([\s\S]*)", block=False)
+tts_handler = on_regex(rf"^{prefix}(.+?)说([\s\S]*)", block=False)
 speaker_list = on_command(
     "语音列表", aliases={"语音角色列表"}, block=True, rule=to_me()
 )
@@ -54,16 +57,16 @@ async def tts_handle(message: UniMsg):
     try:
         fish_audio_api = FishAudioAPI()
         fish_speech_api = FishSpeechAPI()
-        if IS_ONLINE:
+        if is_online:
             await tts_handler.send("正在通过在线api合成语音, 请稍等")
             request = await fish_audio_api.generate_servettsrequest(
-                text, speaker, CHUNKLENGTH
+                text, speaker, chunk_length
             )
             audio = await fish_audio_api.generate_tts(request)
         else:
             await tts_handler.send("正在通过本地api合成语音, 请稍等")
             request = await fish_speech_api.generate_servettsrequest(
-                text, speaker, CHUNKLENGTH
+                text, speaker, chunk_length
             )
             audio = await fish_speech_api.generate_tts(request)
         await UniMessage.voice(raw=audio).finish()
@@ -77,7 +80,7 @@ async def speaker_list_handle(event: Event):
     try:
         fish_audio_api = FishAudioAPI()
         fish_speech_api = FishSpeechAPI()
-        if IS_ONLINE:
+        if is_online:
             _list = fish_audio_api.get_speaker_list()
             await speaker_list.finish("语音角色列表: " + ", ".join(_list))
         else:
@@ -91,7 +94,7 @@ async def speaker_list_handle(event: Event):
 async def balance_handle(event: Event):
     try:
         fish_audio_api = FishAudioAPI()
-        if IS_ONLINE:
+        if is_online:
             await balance.send("正在查询在线语音余额, 请稍等")
             balance_float = await fish_audio_api.get_balance()
             await balance.finish(f"语音余额为: {balance_float}")
