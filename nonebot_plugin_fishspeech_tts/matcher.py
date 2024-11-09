@@ -53,6 +53,7 @@ async def tts_handle(message: UniMsg):
         speaker = reply_msg.split("说", 1)[0]
     else:
         speaker, text = (message[Text, 0].text).split("说", 1)
+        speaker = speaker.replace(prefix, "").strip()  # 去除前缀
 
     try:
         fish_audio_api = FishAudioAPI()
