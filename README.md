@@ -7,7 +7,7 @@
 _⭐基于Nonebot2的调用在线[fish-audio](https://fish.audio/zh-CN/)或离线[fish-speech](https://github.com/fishaudio/fish-speech) api⭐_
 _⭐文本生成语音`tts`插件⭐_
 
-<a href="https://www.python.org/downloads/release/python-390/"><img src="https://img.shields.io/badge/python-3.10+-blue"></a>  <a href=""><img src="https://img.shields.io/badge/QQ-1141538825-yellow"></a> <a href="https://github.com/Cvandia/nonebot-plugin-game-torrent/blob/main/LICENCE"><img src="https://img.shields.io/badge/license-MIT-blue"></a> <a href="https://v2.nonebot.dev/"><img src="https://img.shields.io/badge/Nonebot2-2.2.0+-red"></a>[![Python package](https://github.com/Cvandia/nonebot-plugin-fishspeech-tts/actions/workflows/python.yml/badge.svg?branch=master)](https://github.com/Cvandia/nonebot-plugin-fishspeech-tts/actions/workflows/python.yml)
+<a href="https://www.python.org/downloads/release/python-390/"><img src="https://img.shields.io/badge/python-3.10+-blue"></a>  <a href=""><img src="https://img.shields.io/badge/QQ-1141538825-yellow"></a> <a href="https://github.com/Cvandia/nonebot-plugin-game-torrent/blob/main/LICENCE"><img src="https://img.shields.io/badge/license-MIT-blue"></a> <a href="https://v2.nonebot.dev/"><img src="https://img.shields.io/badge/Nonebot2-2.2.0+-red"></a>[![Python package](https://github.com/Cvandia/nonebot-plugin-fishspeech-tts/actions/workflows/python-app.yml/badge.svg?branch=master)](https://github.com/Cvandia/nonebot-plugin-fishspeech-tts/actions/workflows/python-app.yml)
 
 **中文简体** | [**English**](./docs/README_EN.md)
 
