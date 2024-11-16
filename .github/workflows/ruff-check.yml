@@ -1,0 +1,19 @@
+name: Ruff Check
+
+on:
+  push:
+    branches: [ "*" ]
+  pull_request:
+    paths:
+      - "nonebot_plugin_fishspeech_tts/**"
+
+
+jobs:
+  ruff:
+    name: Ruff Lint
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Run Ruff Lint
+        uses: chartboost/ruff-action@v1

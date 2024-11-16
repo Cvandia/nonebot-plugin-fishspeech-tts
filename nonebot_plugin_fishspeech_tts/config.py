@@ -8,7 +8,6 @@ from nonebot import get_plugin_config
 
 
 class Config(BaseModel):
-
     # 基础配置
     tts_is_online: bool = True
     tts_chunk_length: Literal["normal", "short", "long"] = "normal"

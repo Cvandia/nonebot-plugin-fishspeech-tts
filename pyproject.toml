@@ -25,3 +25,5 @@ requires-python = "<4.0,>=3.10"
 readme = "README.md"
 license = {text = "MIT"}
 
+[dependency-groups]
+dev = ["ruff>=0.7.4"]

@@ -25,7 +25,7 @@ Simply prepare the voice of the character you wish to clone, label the voice fil
 
 > [!note]
 > This plugin is for **learning** and **research** purposes only. Users must assume all risks associated with using the plugin. The author is not responsible for any losses or issues arising from the use of the plugin. Please use the plugin responsibly and **comply with relevant laws and regulations.**
-Using **this plugin indicates that you have read and agree to the above disclaimer**. If you do not agree or cannot comply with the above statement, please do not use this plugin. 
+Using **this plugin indicates that you have read and agree to the above disclaimer**. If you do not agree or cannot comply with the above statement, please do not use this plugin.
 
 ## 💿 Installation
 

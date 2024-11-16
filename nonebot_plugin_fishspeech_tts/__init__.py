@@ -1,21 +1,16 @@
+import contextlib
+from .config import Config
 from nonebot import require
 
 require("nonebot_plugin_alconna")
 
-from .config import Config
-from . import matcher
 
-import contextlib
-
-
-usage: str = (
-    """
+usage: str = """
 指令：
     发送:[角色名]说[文本]即可发送TTS语音。
     发送:[语音列表]以查看支持的发音人。
     发送:[语音余额]以查看在线api余额。
 """.strip()
-)
 
 with contextlib.suppress(Exception):
     from nonebot.plugin import PluginMetadata, inherit_supported_adapters

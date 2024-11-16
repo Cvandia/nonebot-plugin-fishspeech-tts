@@ -55,16 +55,16 @@ git clone https://github.com/Cvandia/nonebot-plugin-fishspeech-tts
 - 在窗口运行处
 将文件夹`nonebot-plugin-fishspeech-tts`复制到bot根目录下的`src/plugins`(或创建bot时的其他名称`xxx/plugins`)
 
- 
+
  </details>
- 
+
  <details>
  <summary>注意</summary>
- 
+
  推荐镜像站下载
-  
+
  清华源```https://pypi.tuna.tsinghua.edu.cn/simple```
- 
+
  阿里源```https://mirrors.aliyun.com/pypi/simple/```
 
 </details>
