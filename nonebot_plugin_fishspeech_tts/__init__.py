@@ -4,6 +4,8 @@ from nonebot import require
 
 require("nonebot_plugin_alconna")
 
+from . import matcher as _match  # noqa
+
 
 usage: str = """
 指令：
