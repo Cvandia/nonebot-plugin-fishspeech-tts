@@ -17,6 +17,8 @@ class Config(BaseModel):
     # 区分配置
     online_authorization: Optional[str] = "xxxxx"
     online_model_first: bool = True
+    # 设置代理地址
+    online_api_proxy: Optional[str] = None
 
     offline_api_url: str = "http://127.0.0.1:8080"
 

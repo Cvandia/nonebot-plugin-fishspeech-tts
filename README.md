@@ -22,12 +22,16 @@ _⭐文本生成语音`tts`插件⭐_
 
 > 或者使用官方在线api -> [fish-audio](https://fish.audio/zh-CN/)即可享受快速云端的语音生成。
 
+> [!WARNING]
+> 由于目前国内无法正常访问fish-audio,需要配置[代理](#️-配置)或者使用离线fish-speech生成语音。
+
 ## 📜 免责声明
 
-> [!note]
+> [!CAUTION]
 > 本插件仅供**学习**和**研究**使用，使用者需自行承担使用插件的风险。作者不对插件的使用造成的任何损失或问题负责。请合理使用插件，**遵守相关法律法规。**
 使用**本插件即表示您已阅读并同意遵守以上免责声明**。如果您不同意或无法遵守以上声明，请不要使用本插件。
 
+---
 
 ## 💿 安装
 
@@ -78,7 +82,7 @@ git clone https://github.com/Cvandia/nonebot-plugin-fishspeech-tts
 |  tts_is_online   |  bool   |   是   |       True        |                       是否使用云端api                       |
 | tts_chunk_length | literal |   否   |     "normal"      | 请求时音频分片长度，默认为normal，可选：short, normal, long |
 |  tts_audio_path  |   str   |   否   | "./data/参考音频" |            语音素材路径，默认为"./data/参考音频"            |
-|    tts_prefix    |   str   |   否   |       None        |                  触发前缀，默认为None                   |
+|    tts_prefix    |   str   |   否   |       None        |                    触发前缀，默认为None                     |
 
 **注：参考音频的文件名格式为：［角色名］音频对应的文字标签.[音频后缀名]**
 
@@ -95,6 +99,7 @@ ___
 | :------------------: | :---: | :----: | :-----: | :--------------------------------------------------------------------------------------------------------------------------------------------------------------------------: |
 | online_authorization |  str  |   是   | "xxxxx" |                                                    官网api鉴权秘钥，详见[链接](https://fish.audio/zh-CN/go-api/api-keys/)                                                    |
 |  online_model_first  | bool  |   否   |  True   | 如果你想调用官方模型，通过自己的参考音频，定制角色音色，将此项设为`False`。当然，如果你没有准备参考音频，也会调用官网已经有的音色，具体详见[链接](https://fish.audio/zh-CN/) |
+|   online_api_proxy   |  str  |   否   |  None   |                                                                     代理地址，如：http://127.0.0.1:7890                                                                      |
 
 ---
 

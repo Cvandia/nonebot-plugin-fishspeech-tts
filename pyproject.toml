@@ -10,7 +10,7 @@ build-backend = "pdm.backend"
 
 [project]
 name = "nonebot-plugin-fishspeech-tts"
-version = "0.3.3"
+version = "0.3.4"
 description = "小样本TTS,通过调用在线或本地api发送TTS语音"
 authors = [
     {name = "Cvandia",email = "106718176+Cvandia@users.noreply.github.com"},

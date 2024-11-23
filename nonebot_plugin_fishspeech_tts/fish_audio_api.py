@@ -29,6 +29,7 @@ import ormsgpack
 
 
 is_reference_id_first = config.online_model_first
+online_api_proxy = config.online_api_proxy
 
 
 class FishAudioAPI:
@@ -37,8 +38,9 @@ class FishAudioAPI:
     """
 
     def __init__(self):
-        self.url = "https://api.fish.audio/v1/tts"
+        self.url: str = "https://api.fish.audio/v1/tts"
         self.path_audio: Path = Path(config.tts_audio_path)
+        self.proxy = online_api_proxy
 
         # 如果在线授权码为空, 且使用在线api, 则抛出异常
         if not config.online_authorization and config.tts_is_online:
@@ -70,7 +72,7 @@ class FishAudioAPI:
         """
         request_api = "https://api.fish.audio/model"
         sort_options = ["score", "task_count", "created_at"]
-        async with AsyncClient() as client:
+        async with AsyncClient(proxies=self.proxy) as client:
             for sort_by in sort_options:
                 params = {"title": speaker, "sort_by": sort_by}
                 response = await client.get(
@@ -147,7 +149,7 @@ class FishAudioAPI:
         if request.references:
             self.headers["content-type"] = "application/msgpack"
             try:
-                async with AsyncClient() as client:
+                async with AsyncClient(proxies=self.proxy) as client:
                     async with client.stream(
                         "POST",
                         self.url,
@@ -166,11 +168,13 @@ class FishAudioAPI:
                 HTTPStatusError,
             ) as e:
                 logger.error(f"获取TTS音频失败: {e}")
+                if self.proxy:
+                    raise HTTPException("代理地址错误, 请检查代理地址是否正确")
                 raise HTTPException("网络错误, 请检查网络连接")
         else:
             self.headers["content-type"] = "application/json"
             try:
-                async with AsyncClient() as client:
+                async with AsyncClient(proxies=self.proxy) as client:
                     response = await client.post(
                         self.url,
                         headers=self.headers,
@@ -186,6 +190,8 @@ class FishAudioAPI:
                 HTTPStatusError,
             ) as e:
                 logger.error(f"获取TTS音频失败: {e}")
+                if self.proxy:
+                    raise HTTPException("代理地址错误, 请检查代理地址是否正确")
                 raise HTTPException("网络错误, 请检查网络连接")
 
     async def get_balance(self) -> float:
@@ -193,7 +199,7 @@ class FishAudioAPI:
         获取账户余额
         """
         balance_url = "https://api.fish.audio/wallet/self/api-credit"
-        async with AsyncClient() as client:
+        async with AsyncClient(proxies=self.proxy) as client:
             response = await client.get(balance_url, headers=self.headers)
             try:
                 return response.json()["credit"]
