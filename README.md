@@ -2,12 +2,22 @@
 
 # nonebot-plugin-fishspeech-tts
 
-<a href="https://v2.nonebot.dev/store"><img src="https://count.getloli.com/get/@nonebot-plugin-fishspeech-tts?theme=asoul"></a>
+<a href="https://v2.nonebot.dev/store">
+<img src="https://count.getloli.com/get/@nonebot-plugin-fishspeech-tts?theme=asoul"></a>
 
 _⭐基于Nonebot2的调用在线[fish-audio](https://fish.audio/zh-CN/)或离线[fish-speech](https://github.com/fishaudio/fish-speech) api⭐_
 _⭐文本生成语音`tts`插件⭐_
 
-<a href="https://www.python.org/downloads/release/python-390/"><img src="https://img.shields.io/badge/python-3.10+-blue"></a>  <a href=""><img src="https://img.shields.io/badge/QQ-1141538825-yellow"></a> <a href="https://github.com/Cvandia/nonebot-plugin-game-torrent/blob/main/LICENCE"><img src="https://img.shields.io/badge/license-MIT-blue"></a> <a href="https://v2.nonebot.dev/"><img src="https://img.shields.io/badge/Nonebot2-2.2.0+-red"></a>[![Python package](https://github.com/Cvandia/nonebot-plugin-fishspeech-tts/actions/workflows/python-app.yml/badge.svg?branch=master)](https://github.com/Cvandia/nonebot-plugin-fishspeech-tts/actions/workflows/python-app.yml)
+<a href="https://www.python.org/downloads/release/python-390/">
+    <img src="https://img.shields.io/badge/python-3.10+-blue"></a>
+<a href="https://qm.qq.com/q/SL6m4KdFe4">
+    <img src="https://img.shields.io/badge/QQ-1141538825-yellow"></a>
+<a href="https://github.com/Cvandia/nonebot-plugin-game-torrent/blob/main/LICENCE">
+    <img src="https://img.shields.io/badge/license-MIT-blue"></a>
+<a href="https://v2.nonebot.dev/">
+    <img src="https://img.shields.io/badge/Nonebot2-2.2.0+-red"></a>
+<a href="https://github.com/Cvandia/nonebot-plugin-fishspeech-tts/actions/workflows/python-app.yml">
+    <img src="https://github.com/Cvandia/nonebot-plugin-fishspeech-tts/actions/workflows/python-app.yml/badge.svg?branch=master"></a>
 
 **中文简体** | [**English**](./docs/README_EN.md)
 
@@ -160,6 +170,9 @@ git clone https://github.com/fishaudio/fish-speech
 **在`API_FLAGS.txt`里添加额外参数**
 - 1.`--complie` ->是否启动编译后的模型 (更快的生成tts，但启动较慢)
 - 2.`--workers 数字` ->启动`数字`个多协程 (请务必设置，因为默认一个容易阻塞)
+- 3.`--device cpu` ->使用cpu生成tts (如果使用gpu，请忽略)
+- 4.`--half` ->使用半精度生成tts
+- 5.`--max-text-length` ->输入文本最大长度
 
 ### linux离线搭建fish-speech
 - 更多参考[官方文档](https://speech.fish.audio/zh)
