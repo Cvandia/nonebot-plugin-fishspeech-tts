@@ -149,17 +149,16 @@ class FishAudioAPI:
         if request.references:
             self.headers["content-type"] = "application/msgpack"
             try:
-                async with AsyncClient(proxies=self.proxy) as client:
-                    async with client.stream(
-                        "POST",
-                        self.url,
-                        headers=self.headers,
-                        content=ormsgpack.packb(
-                            request, option=ormsgpack.OPT_SERIALIZE_PYDANTIC
-                        ),
-                        timeout=60,
-                    ) as resp:
-                        return await resp.aread()
+                async with AsyncClient(proxies=self.proxy) as client, client.stream(
+                    "POST",
+                    self.url,
+                    headers=self.headers,
+                    content=ormsgpack.packb(
+                        request, option=ormsgpack.OPT_SERIALIZE_PYDANTIC
+                    ),
+                    timeout=60,
+                ) as resp:
+                    return await resp.aread()
             except (
                 ReadTimeout,
                 ConnectTimeout,
