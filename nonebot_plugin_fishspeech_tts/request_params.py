@@ -5,11 +5,6 @@ from typing import Literal
 import enum
 
 
-"""
-用于定义请求参数的类
-"""
-
-
 class ChunkLength(enum.Enum):
     SHORT = 100
     NORMAL = 200

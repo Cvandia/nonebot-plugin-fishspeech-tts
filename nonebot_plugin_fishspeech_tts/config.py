@@ -2,10 +2,6 @@ from pydantic import BaseModel
 from typing import Optional, Literal
 from nonebot import get_plugin_config
 
-"""
-用于定义配置文件类, 用于配置插件参数
-"""
-
 
 class Config(BaseModel):
     # 基础配置

@@ -18,10 +18,6 @@ from .files import (
 )
 import ormsgpack
 
-"""
-用于 离线FishSpeech 的API接口调用
-"""
-
 
 class FishSpeechAPI:
     def __init__(self):

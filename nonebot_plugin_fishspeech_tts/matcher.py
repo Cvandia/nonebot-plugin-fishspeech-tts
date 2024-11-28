@@ -9,10 +9,6 @@ from .exception import APIException
 from .request_params import ChunkLength
 from .config import config
 
-"""
-用于 nonebot2 的 matcher 响应函数
-"""
-
 
 is_online = config.tts_is_online  # True 为在线模式，False 为本地模式
 prefix = (
