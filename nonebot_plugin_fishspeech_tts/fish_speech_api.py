@@ -1,10 +1,7 @@
 from httpx import (
     AsyncClient,
-    ConnectError,
-    ConnectTimeout,
     HTTPStatusError,
     RequestError,
-    ReadTimeout,
 )
 from nonebot.log import logger
 from pathlib import Path
@@ -96,11 +93,8 @@ class FishSpeechAPI:
                 )
                 return response.content
         except (
-            ReadTimeout,
-            ConnectTimeout,
-            ConnectError,
-            RequestError,
             HTTPStatusError,
+            RequestError,
         ) as e:
             logger.error(f"获取TTS音频失败: {e}")
             raise HTTPException("获取TTS音频超时, 你的文本太长啦！")

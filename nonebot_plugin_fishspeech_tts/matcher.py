@@ -1,6 +1,6 @@
 from nonebot import on_command, on_regex, get_driver
 from nonebot.rule import to_me
-from nonebot.adapters import Event, Message
+from nonebot.adapters import Message
 from nonebot_plugin_alconna import UniMessage, Reply, UniMsg, Text
 
 from .fish_audio_api import FishAudioAPI
@@ -73,7 +73,7 @@ async def tts_handle(message: UniMsg):
 
 
 @speaker_list.handle()
-async def speaker_list_handle(event: Event):
+async def speaker_list_handle():
     try:
         fish_audio_api = FishAudioAPI()
         fish_speech_api = FishSpeechAPI()
@@ -88,7 +88,7 @@ async def speaker_list_handle(event: Event):
 
 
 @balance.handle()
-async def balance_handle(event: Event):
+async def balance_handle():
     try:
         fish_audio_api = FishAudioAPI()
         if is_online:
