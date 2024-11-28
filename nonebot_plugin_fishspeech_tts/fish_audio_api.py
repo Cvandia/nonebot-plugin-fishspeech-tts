@@ -4,7 +4,6 @@ from httpx import (
     ReadTimeout,
     ConnectTimeout,
     ConnectError,
-    RequestError,
     HTTPStatusError,
 )
 from .exception import (
@@ -159,10 +158,7 @@ class FishAudioAPI:
                 ):
                     return await resp.aread()
             except (
-                ReadTimeout,
-                ConnectTimeout,
                 ConnectError,
-                RequestError,
                 HTTPStatusError,
             ) as e:
                 logger.error(f"获取TTS音频失败: {e}")
@@ -184,7 +180,6 @@ class FishAudioAPI:
                 ReadTimeout,
                 ConnectTimeout,
                 ConnectError,
-                RequestError,
                 HTTPStatusError,
             ) as e:
                 logger.error(f"获取TTS音频失败: {e}")
