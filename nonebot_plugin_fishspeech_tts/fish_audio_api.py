@@ -67,7 +67,7 @@ class FishAudioAPI:
         """
         request_api = "https://api.fish.audio/model"
         sort_options = ["score", "task_count", "created_at"]
-        async with AsyncClient(proxies=self.proxy) as client:
+        async with AsyncClient(proxy=self.proxy) as client:
             for sort_by in sort_options:
                 params = {"title": speaker, "sort_by": sort_by}
                 response = await client.get(
@@ -145,7 +145,7 @@ class FishAudioAPI:
             self.headers["content-type"] = "application/msgpack"
             try:
                 async with (
-                    AsyncClient(proxies=self.proxy) as client,
+                    AsyncClient(proxy=self.proxy) as client,
                     client.stream(
                         "POST",
                         self.url,
@@ -168,7 +168,7 @@ class FishAudioAPI:
         else:
             self.headers["content-type"] = "application/json"
             try:
-                async with AsyncClient(proxies=self.proxy) as client:
+                async with AsyncClient(proxy=self.proxy) as client:
                     response = await client.post(
                         self.url,
                         headers=self.headers,
@@ -192,7 +192,7 @@ class FishAudioAPI:
         获取账户余额
         """
         balance_url = "https://api.fish.audio/wallet/self/api-credit"
-        async with AsyncClient(proxies=self.proxy) as client:
+        async with AsyncClient(proxy=self.proxy) as client:
             response = await client.get(balance_url, headers=self.headers)
             try:
                 return response.json()["credit"]
