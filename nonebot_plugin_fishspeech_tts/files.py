@@ -1,8 +1,9 @@
-from pathlib import Path
-from nonebot.log import logger
-from .exception import FileHandleException
 import re
+from pathlib import Path
 
+from nonebot.log import logger
+
+from .exception import FileHandleException
 
 # 音频文件后缀
 AUDIO_FILE_SUFFIX = [
@@ -53,10 +54,11 @@ def get_speaker_audio_path(path_audio: Path, speaker_name: str) -> list[Path]:
         FileHandleException: 未找到说话人音频文件
     """
 
-    speaker_audio_path = []
-    for audio in path_audio.iterdir():
-        if speaker_name in audio.name and audio.suffix in AUDIO_FILE_SUFFIX:
-            speaker_audio_path.append(audio)
+    speaker_audio_path = [
+        audio
+        for audio in path_audio.iterdir()
+        if speaker_name in audio.name and audio.suffix in AUDIO_FILE_SUFFIX
+    ]
     logger.debug(f"获取到角色的语音路劲: {speaker_audio_path}")
     if not speaker_audio_path:
         raise FileHandleException(f"未找到角色:{speaker_name}的音频文件")

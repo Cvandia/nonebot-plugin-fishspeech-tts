@@ -1,11 +1,16 @@
-from .config import config
+from pathlib import Path
+
+import ormsgpack
 from httpx import (
     AsyncClient,
-    ReadTimeout,
-    ConnectTimeout,
     ConnectError,
+    ConnectTimeout,
     HTTPStatusError,
+    ReadTimeout,
 )
+from nonebot.log import logger
+
+from .config import config
 from .exception import (
     APIException,
     AuthorizationException,
@@ -13,15 +18,11 @@ from .exception import (
     HTTPException,
 )
 from .files import (
-    get_speaker_audio_path,
     extract_text_by_filename,
     get_path_speaker_list,
+    get_speaker_audio_path,
 )
-from .request_params import ServeReferenceAudio, ServeTTSRequest, ChunkLength
-from nonebot.log import logger
-from pathlib import Path
-import ormsgpack
-
+from .request_params import ChunkLength, ServeReferenceAudio, ServeTTSRequest
 
 is_reference_id_first = config.online_model_first
 online_api_proxy = config.online_api_proxy
@@ -40,10 +41,9 @@ class FishAudioAPI:
         # 如果在线授权码为空, 且使用在线api, 则抛出异常
         if not config.online_authorization and config.tts_is_online:
             raise APIException("请先在配置文件中填写在线授权码或使用离线api")
-        else:
-            self.headers = {
-                "Authorization": f"Bearer {config.online_authorization}",
-            }
+        self.headers = {
+            "Authorization": f"Bearer {config.online_authorization}",
+        }
 
         # 如果音频文件夹不存在, 则创建音频文件夹
         if not self.path_audio.exists():
@@ -118,7 +118,7 @@ class FishAudioAPI:
                     logger.warning("音频文件夹不存在, 已转为在线模型优先模式")
                     reference_id = await self._get_reference_id_by_speaker(speaker_name)
         except APIException as e:
-            raise e
+            raise e from e
         return ServeTTSRequest(
             text=text,
             reference_id=reference_id,
@@ -163,8 +163,8 @@ class FishAudioAPI:
             ) as e:
                 logger.error(f"获取TTS音频失败: {e}")
                 if self.proxy:
-                    raise HTTPException("代理地址错误, 请检查代理地址是否正确")
-                raise HTTPException("网络错误, 请检查网络连接")
+                    raise HTTPException("代理地址错误, 请检查代理地址是否正确") from e
+                raise HTTPException("网络错误, 请检查网络连接") from e
         else:
             self.headers["content-type"] = "application/json"
             try:
@@ -184,8 +184,8 @@ class FishAudioAPI:
             ) as e:
                 logger.error(f"获取TTS音频失败: {e}")
                 if self.proxy:
-                    raise HTTPException("代理地址错误, 请检查代理地址是否正确")
-                raise HTTPException("网络错误, 请检查网络连接")
+                    raise HTTPException("代理地址错误, 请检查代理地址是否正确") from e
+                raise HTTPException("网络错误, 请检查网络连接") from e
 
     async def get_balance(self) -> float:
         """
@@ -197,7 +197,7 @@ class FishAudioAPI:
             try:
                 return response.json()["credit"]
             except KeyError:
-                raise AuthorizationException("授权码错误或已失效")
+                raise AuthorizationException("授权码错误或已失效") from KeyError
 
     def get_speaker_list(self) -> list[str]:
         """

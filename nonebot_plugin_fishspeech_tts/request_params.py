@@ -1,8 +1,8 @@
+import enum
+from typing import Annotated, Literal
+
 from pydantic import BaseModel
 from pydantic.fields import Field
-from typing import Annotated
-from typing import Literal
-import enum
 
 
 class ChunkLength(enum.Enum):

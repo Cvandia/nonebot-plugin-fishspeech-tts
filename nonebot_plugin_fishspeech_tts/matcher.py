@@ -1,20 +1,19 @@
-from nonebot import on_command, on_regex, get_driver
-from nonebot.rule import to_me
+from nonebot import get_driver, on_command, on_regex
 from nonebot.adapters import Message
-from nonebot_plugin_alconna import UniMessage, Reply, UniMsg, Text
+from nonebot.rule import to_me
+from nonebot_plugin_alconna import Reply, Text, UniMessage, UniMsg
 
+from .config import config
+from .exception import APIException
 from .fish_audio_api import FishAudioAPI
 from .fish_speech_api import FishSpeechAPI
-from .exception import APIException
 from .request_params import ChunkLength
-from .config import config
-
 
 is_online = config.tts_is_online  # True 为在线模式，False 为本地模式
 prefix = (
     config.tts_prefix
     if config.tts_prefix
-    else list(get_driver().config.command_start)[0]
+    else next(iter(get_driver().config.command_start))
 )  # 命令前缀
 
 CHUNKLENGTH_MAP = {

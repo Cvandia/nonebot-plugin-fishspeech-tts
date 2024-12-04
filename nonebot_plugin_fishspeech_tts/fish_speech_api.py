@@ -1,19 +1,21 @@
+from pathlib import Path
+
+import ormsgpack
 from httpx import (
     AsyncClient,
     HTTPStatusError,
     RequestError,
 )
 from nonebot.log import logger
-from pathlib import Path
+
 from .config import config
 from .exception import APIException, FileHandleException, HTTPException
-from .request_params import ServeReferenceAudio, ServeTTSRequest, ChunkLength
 from .files import (
     extract_text_by_filename,
-    get_speaker_audio_path,
     get_path_speaker_list,
+    get_speaker_audio_path,
 )
-import ormsgpack
+from .request_params import ChunkLength, ServeReferenceAudio, ServeTTSRequest
 
 
 class FishSpeechAPI:
@@ -51,7 +53,7 @@ class FishSpeechAPI:
         try:
             speaker_audio_path = get_speaker_audio_path(self.path_audio, speaker_name)
         except FileHandleException as e:
-            raise APIException(str(e))
+            raise APIException(str(e)) from e
         for audio in speaker_audio_path:
             audio_bytes = audio.read_bytes()
             ref_text = extract_text_by_filename(audio.name)
@@ -97,9 +99,9 @@ class FishSpeechAPI:
             RequestError,
         ) as e:
             logger.error(f"获取TTS音频失败: {e}")
-            raise HTTPException("获取TTS音频超时, 你的文本太长啦！")
+            raise HTTPException("获取TTS音频超时, 你的文本太长啦！") from e
         except Exception:
-            raise APIException("获取TTS音频失败, 检查API后端")
+            raise APIException("获取TTS音频失败, 检查API后端") from None
 
     def get_speaker_list(self) -> list[str]:
         """
@@ -111,4 +113,4 @@ class FishSpeechAPI:
         try:
             return get_path_speaker_list(self.path_audio)
         except FileHandleException as e:
-            raise APIException(str(e))
+            raise APIException(str(e)) from e

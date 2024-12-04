@@ -1,6 +1,8 @@
 import contextlib
-from .config import Config
+
 from nonebot import require
+
+from .config import Config
 
 require("nonebot_plugin_alconna")
 
