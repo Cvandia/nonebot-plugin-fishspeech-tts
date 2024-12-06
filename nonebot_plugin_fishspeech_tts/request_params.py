@@ -1,8 +1,7 @@
 import enum
-from typing import Annotated, Literal
+from typing import Literal
 
 from pydantic import BaseModel
-from pydantic.fields import Field
 
 
 class ChunkLength(enum.Enum):
@@ -25,8 +24,8 @@ class ServeReferenceAudio(BaseModel):
 class ServeTTSRequest(BaseModel):
     """TTS请求"""
 
-    text: str = ""  # 待合成文本
-    chunk_length: Annotated[int, Field(ge=100, le=300, strict=True)] = 200  # 分片长度
+    text: str  # 待合成文本
+    chunk_length: int = 200  # 分片长度
     format: Literal["wav", "pcm", "mp3"] = "mp3"  # 音频格式
     mp3_bitrate: Literal[64, 128, 192] = 64  # mp3比特率
     references: list[ServeReferenceAudio] = []  # 参考音频
