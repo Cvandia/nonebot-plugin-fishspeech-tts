@@ -2,7 +2,6 @@ name: Publish package to PyPI
 
 on:
   push:
-    branches: ["master","main"]
     tags:
       - 'v*' # 匹配"v1.0.0"、"v1.0.0-alpha"等发布标签
 
