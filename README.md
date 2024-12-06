@@ -149,14 +149,14 @@ ___
 ### windows离线搭建简略教程
 
 **使用前**
-- [x] [CUDA toolkit](https://developer.nvidia.com/cuda-toolkit) 使用前确保安装正确版本的CUDA
+- [ ] [CUDA toolkit](https://developer.nvidia.com/cuda-toolkit) 使用前确保安装正确版本的CUDA
 
 **准备`fish-speech`**
 - 1.将`fish-speech` 仓库 [`release`](https://github.com/fishaudio/fish-speech/releases) 的代码(`Source code
 (zip)`)下载到本地
 - 2.解压到本地
 - 3.打开`fish-speech`根目录
-- 4.运行`install_env.sh`安装虚拟环境以及所需依赖
+- 4.运行`install_env.bat`安装虚拟环境以及所需依赖
 - 5.运行`start.bat`初次启动
 - 6.修改`API_FLAGS.txt`后再次启动即可
 
