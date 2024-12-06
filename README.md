@@ -148,26 +148,28 @@ ___
 
 ### windows离线搭建简略教程
 
-**准备`fish-speech`**
-- 1.将`fish-speech` 仓库 `git clone` 至本地
-```bash
+**使用前**
+- [x] [CUDA toolkit](https://developer.nvidia.com/cuda-toolkit) 使用前确保安装正确版本的CUDA
 
-git clone https://github.com/fishaudio/fish-speech
-```
-- 2.运行`install_env.bat`安装虚拟环境以及所需依赖
-- 3.运行`start.bat`初次启动
-- 4.修改`API_FLAGS.txt`后再次启动即可
+**准备`fish-speech`**
+- 1.将`fish-speech` 仓库 [`release`](https://github.com/fishaudio/fish-speech/releases) 的代码(`Source code
+(zip)`)下载到本地
+- 2.解压到本地
+- 3.打开`fish-speech`根目录
+- 4.运行`install_env.sh`安装虚拟环境以及所需依赖
+- 5.运行`start.bat`初次启动
+- 6.修改`API_FLAGS.txt`后再次启动即可
 
 **启动API服务**
 
 - 1.修改`API_FLAGS.txt`大致为以下内容，即取消`api`前面的`#`号
-```
+```bash
 # --infer
 --api
 --listen 0.0.0.0:8080 \ #监听接口
 ...
 ```
-**在`API_FLAGS.txt`里添加额外参数**
+**在`API_FLAGS.txt`里可添加的额外参数**
 - 1.`--complie` ->是否启动编译后的模型 (更快的生成tts，但启动较慢)
 - 2.`--workers 数字` ->启动`数字`个多协程 (请务必设置，因为默认一个容易阻塞)
 - 3.`--device cpu` ->使用cpu生成tts (如果使用gpu，请忽略)

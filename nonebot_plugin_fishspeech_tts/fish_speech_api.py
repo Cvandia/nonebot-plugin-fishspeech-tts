@@ -99,9 +99,9 @@ class FishSpeechAPI:
             RequestError,
         ) as e:
             logger.error(f"获取TTS音频失败: {e}")
-            raise HTTPException("获取TTS音频超时, 你的文本太长啦！") from e
-        except Exception:
-            raise APIException("获取TTS音频失败, 检查API后端") from None
+            raise HTTPException("获取TTS音频超时, 你的接口配置错误或者文本过长") from e
+        except Exception as e:
+            raise APIException(f"{e}\n获取TTS音频失败, 检查API后端") from e
 
     def get_speaker_list(self) -> list[str]:
         """
