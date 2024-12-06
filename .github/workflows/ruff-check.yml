@@ -1,12 +1,12 @@
-name: Ruff Check
+name: Ruff Lint
 
 on:
   push:
-    branches: [ "*" ]
+    branches: [main, master]
   pull_request:
     paths:
-      - "nonebot_plugin_fishspeech_tts/**"
-
+      - nonebot_plugin_fishspeech_tts/**
+      - pyproject.toml
 
 jobs:
   ruff:
@@ -15,5 +15,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Run Ruff Lint
+      - name: Run Ruff
         uses: chartboost/ruff-action@v1
+        with:
+          version: 0.7.0
