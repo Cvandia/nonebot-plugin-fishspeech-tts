@@ -25,7 +25,10 @@ from .files import (
 from .request_params import ChunkLength, ServeReferenceAudio, ServeTTSRequest
 
 is_reference_id_first = config.online_model_first
-online_api_proxy = config.online_api_proxy
+API_URL = config.online_api_url
+API_PROXY = config.online_api_proxy
+IS_STREAM = config.tts_is_stream
+MAX_NEW_TOKENS = config.tts_max_new_tokens
 
 
 class FishAudioAPI:
@@ -34,9 +37,9 @@ class FishAudioAPI:
     """
 
     def __init__(self):
-        self.url: str = "https://api.fish.audio/v1/tts"
+        self.api_url: str = API_URL
         self.path_audio: Path = Path(config.tts_audio_path)
-        self.proxy = online_api_proxy
+        self.proxy = API_PROXY
 
         # 如果在线授权码为空, 且使用在线api, 则抛出异常
         if not config.online_authorization and config.tts_is_online:
@@ -65,7 +68,7 @@ class FishAudioAPI:
         exception:
             APIException: 获取语音角色列表为空
         """
-        request_api = "https://api.fish.audio/model"
+        request_api = self.api_url + "/model"
         sort_options = ["score", "task_count", "created_at"]
         async with AsyncClient(proxy=self.proxy) as client:
             for sort_by in sort_options:
@@ -128,6 +131,8 @@ class FishAudioAPI:
             opus_bitrate=24,
             normalize=True,
             chunk_length=chunk_length.value,
+            max_new_tokens=MAX_NEW_TOKENS,
+            streaming=IS_STREAM,
             references=references,
         )
 
@@ -148,7 +153,7 @@ class FishAudioAPI:
                     AsyncClient(proxy=self.proxy) as client,
                     client.stream(
                         "POST",
-                        self.url,
+                        self.api_url + "/v1/tts",
                         headers=self.headers,
                         content=ormsgpack.packb(
                             request.dict(),
@@ -170,7 +175,7 @@ class FishAudioAPI:
             try:
                 async with AsyncClient(proxy=self.proxy) as client:
                     response = await client.post(
-                        self.url,
+                        self.api_url + "/v1/tts",
                         headers=self.headers,
                         json=request.dict(),
                         timeout=60,
@@ -191,7 +196,7 @@ class FishAudioAPI:
         """
         获取账户余额
         """
-        balance_url = "https://api.fish.audio/wallet/self/api-credit"
+        balance_url = self.api_url + "/wallet/self/api-credit"
         async with AsyncClient(proxy=self.proxy) as client:
             response = await client.get(balance_url, headers=self.headers)
             try:
@@ -204,7 +209,7 @@ class FishAudioAPI:
         获取语音角色列表
         """
         return_list = ["请查看官网了解更多: https://fish.audio/zh-CN/"]
-        if is_reference_id_first:
+        if not is_reference_id_first:
             try:
                 return_list.extend(get_path_speaker_list(self.path_audio))
             except FileHandleException:

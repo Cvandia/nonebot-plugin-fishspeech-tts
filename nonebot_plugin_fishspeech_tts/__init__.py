@@ -7,6 +7,7 @@ from .config import Config
 require("nonebot_plugin_alconna")
 
 from . import matcher as _match  # noqa
+from . import on_start_up  # noqa
 
 
 usage: str = """

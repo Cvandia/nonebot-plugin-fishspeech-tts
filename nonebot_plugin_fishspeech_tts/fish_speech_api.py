@@ -17,11 +17,16 @@ from .files import (
 )
 from .request_params import ChunkLength, ServeReferenceAudio, ServeTTSRequest
 
+API_URL = config.offline_api_url + "/v1/tts"
+PATH_AUDIO = Path(config.tts_audio_path)
+MAX_NEW_TOKENS = config.tts_max_new_tokens
+IS_STREAM = config.tts_is_stream
+
 
 class FishSpeechAPI:
     def __init__(self):
-        self.api_url: str = config.offline_api_url + "/v1/tts"
-        self.path_audio: Path = Path(config.tts_audio_path)
+        self.api_url: str = API_URL
+        self.path_audio: Path = PATH_AUDIO
         self.headers = {
             "content-type": "application/msgpack",
         }
@@ -66,11 +71,11 @@ class FishSpeechAPI:
             normalize=True,
             opus_bitrate=64,
             latency="normal",
-            max_new_tokens=800,
+            max_new_tokens=MAX_NEW_TOKENS,
             top_p=0.7,
             repetition_penalty=1.2,
             temperature=0.7,
-            streaming=False,
+            streaming=IS_STREAM,
             mp3_bitrate=64,
         )
 
@@ -99,7 +104,9 @@ class FishSpeechAPI:
             RequestError,
         ) as e:
             logger.error(f"获取TTS音频失败: {e}")
-            raise HTTPException("获取TTS音频超时, 你的接口配置错误或者文本过长") from e
+            raise HTTPException(
+                f"{e}\n获取TTS音频超时, 你的接口配置错误或者文本过长"
+            ) from e
         except Exception as e:
             raise APIException(f"{e}\n获取TTS音频失败, 检查API后端") from e
 
