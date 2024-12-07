@@ -88,7 +88,7 @@ git clone https://github.com/Cvandia/nonebot-plugin-fishspeech-tts
 | :--------------: | :-----: | :----: | :---------------: | :---------------------------------------------------------: |
 |  tts_is_online   |  bool   |   是   |       True        |                       是否使用云端api                       |
 | tts_chunk_length | literal |   否   |     "normal"      | 请求时音频分片长度，默认为normal，可选：short, normal, long |
-| tts_max_new_tokens   |   int   |   否   |       800       |                   最大音频长度，默认为800,设置为0则为不限制(大概6秒)                   |
+| tts_max_new_tokens   |   int   |   否   |       800       |                   最大音频长度，默认为800,设置为0则为不限制                   |
 |  tts_audio_path  |   str   |   否   | "./data/参考音频" |            语音素材路径，默认为"./data/参考音频"            |
 |    tts_prefix    |   str   |   否   |       None        |                    触发前缀，默认为None                     |
 
