@@ -43,6 +43,7 @@ class FishSpeechAPI:
         text: str,
         speaker_name: str,
         chunk_length: ChunkLength = ChunkLength.NORMAL,
+        # TODO: speed: int = 0,
     ) -> ServeTTSRequest:
         """
         生成TTS请求
@@ -50,6 +51,8 @@ class FishSpeechAPI:
         Args:
             text: 文本
             speaker_name: 说话人姓名
+            chunk_length: 请求语音的切片长度
+            TODO:speed: 语速
         Returns:
             ServeTTSRequest: TTS请求
         """

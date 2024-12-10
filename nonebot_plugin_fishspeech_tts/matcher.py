@@ -1,7 +1,8 @@
 from nonebot import get_driver, on_command, on_regex
 from nonebot.adapters import Message
+from nonebot.params import RegexDict
 from nonebot.rule import to_me
-from nonebot_plugin_alconna import Reply, Text, UniMessage, UniMsg
+from nonebot_plugin_alconna import Reply, UniMessage, UniMsg
 
 from .config import config
 from .exception import APIException
@@ -26,8 +27,11 @@ chunk_length = CHUNKLENGTH_MAP.get(
     config.tts_chunk_length, ChunkLength.NORMAL
 )  # 请求语音长度
 
-
-tts_handler = on_regex(rf"^{prefix}(.+?)说([\s\S]*)", block=False)
+# "xxx说xxx -s int"
+tts_handler = on_regex(
+    rf"^{prefix}(?P<speaker>.+?)说(?P<text>.+)?(?:\s+-s\s+(?P<speed>.+))?$",
+    priority=15,
+)
 speaker_list = on_command(
     "语音列表", aliases={"语音角色列表"}, block=True, rule=to_me()
 )
@@ -35,7 +39,7 @@ balance = on_command("语音余额", block=True, rule=to_me())
 
 
 @tts_handler.handle()
-async def tts_handle(message: UniMsg):
+async def tts_handle(message: UniMsg, regex_group: dict = RegexDict()):  # noqa: B008
     if message.has(Reply):
         front_reply = message[Reply, 0].msg
         if isinstance(front_reply, Message):
@@ -44,11 +48,12 @@ async def tts_handle(message: UniMsg):
             text = front_reply
         else:
             text = str(front_reply)
-        reply_msg = message[Text, 0].text
-        speaker = reply_msg.split("说", 1)[0]
+        speaker = regex_group["speaker"]
+        # TODO: speed = regex_group["speed"]
     else:
-        speaker, text = (message[Text, 0].text).split("说", 1)
-        speaker = speaker.replace(prefix, "").strip()  # 去除前缀
+        text = regex_group["text"]
+        speaker = regex_group["speaker"]
+        # TODO: speed = regex_group["speed"]
 
     try:
         fish_audio_api = FishAudioAPI()
@@ -58,12 +63,14 @@ async def tts_handle(message: UniMsg):
             request = await fish_audio_api.generate_servettsrequest(
                 text, speaker, chunk_length
             )
+            # TODO: request = await fish_audio_api.generate_ttsrequest(text, speaker, speed)
             audio = await fish_audio_api.generate_tts(request)
         else:
             await tts_handler.send("正在通过本地api合成语音, 请稍等")
             request = await fish_speech_api.generate_servettsrequest(
                 text, speaker, chunk_length
             )
+            # TODO: request = await fish_speech_api.generate_ttsrequest(text, speaker, speed)
             audio = await fish_speech_api.generate_tts(request)
         await UniMessage.voice(raw=audio).finish()
 
