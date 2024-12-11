@@ -43,7 +43,7 @@ class FishAudioAPI:
 
         # 如果在线授权码为空, 且使用在线api, 则抛出异常
         if not config.online_authorization and config.tts_is_online:
-            raise APIException("请先在配置文件中填写在线授权码或使用离线api")
+            raise AuthorizationException("请先在配置文件中填写在线授权码或使用离线api")
         self.headers = {
             "Authorization": f"Bearer {config.online_authorization}",
         }
@@ -53,7 +53,7 @@ class FishAudioAPI:
             self.path_audio.mkdir(parents=True)
             logger.warning(f"音频文件夹{self.path_audio.name}不存在, 已创建")
         elif not self.path_audio.is_dir():
-            raise NotADirectoryError(f"{self.path_audio.name}不是一个文件夹")
+            raise FileHandleException(f"{self.path_audio.name}不是一个文件夹")
 
     async def _get_reference_id_by_speaker(self, speaker: str) -> str:
         """
