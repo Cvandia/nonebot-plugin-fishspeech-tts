@@ -5,7 +5,7 @@
 <a href="https://v2.nonebot.dev/store">
 <img src="https://count.getloli.com/get/@nonebot-plugin-fishspeech-tts?theme=asoul"></a>
 
-_⭐基于Nonebot2的调用在线[fish-audio](https://fish.audio/zh-CN/)或离线[fish-speech](https://github.com/fishaudio/fish-speech) api⭐_
+_⭐基于Nonebot2的调用在线[fish-audio](https://fish-audio.cn/zh-CN/)或离线[fish-speech](https://github.com/fishaudio/fish-speech) api⭐_
 _⭐文本生成语音`tts`插件⭐_
 
 <a href="https://www.python.org/downloads/release/python-390/">
@@ -30,7 +30,7 @@ _⭐文本生成语音`tts`插件⭐_
 **仅需一条5秒语音素材，就可~~完美~~优秀克隆素材本音呐！**
 只需要准备好你想克隆的角色语音，并对其语音进行文件名的标注(见下文)，就可以快速生成语音。
 
-> 或者使用官方在线api -> [fish-audio](https://fish.audio/zh-CN/)即可享受快速云端的语音生成。
+> 或者使用官方在线api -> [fish-audio](https://fish-audio.cn/zh-CN/)即可享受快速云端的语音生成。
 
 ## 📜 免责声明
 
