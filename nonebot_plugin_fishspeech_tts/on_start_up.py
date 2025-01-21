@@ -1,4 +1,4 @@
-from httpx import AsyncClient, HTTPStatusError
+from httpx import AsyncClient, TimeoutException
 from nonebot import get_driver
 from nonebot.log import logger
 
@@ -16,6 +16,8 @@ if IS_ONLINE:
         async with AsyncClient() as client:
             try:
                 response = await client.get(API)
-                response.raise_for_status()
-            except HTTPStatusError as e:
+                rsp_text = response.text
+                if "Nothing" in rsp_text:
+                    logger.warning("在线API可用")
+            except TimeoutException as e:
                 logger.warning(f"在线API不可用: {e}\n请尝试更换API地址或配置代理")
