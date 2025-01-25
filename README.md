@@ -27,9 +27,10 @@ _⭐文本生成语音`tts`插件⭐_
 
 ## ⭐ 介绍
 
+[![video](./res/演示.png)](https://github.com/user-attachments/assets/75fa16e0-f340-4bbe-9c58-ef4062ee76ac)
+
 **仅需一条5秒语音素材，就可~~完美~~优秀克隆素材本音呐！**
 只需要准备好你想克隆的角色语音，并对其语音进行文件名的标注(见下文)，就可以快速生成语音。
-
 > 或者使用官方在线api -> [fish-audio](https://fish-audio.cn/zh-CN/)即可享受快速云端的语音生成。
 
 ## 📜 免责声明
