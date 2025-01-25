@@ -97,7 +97,7 @@ class FishSpeechAPI:
                     self.api_url,
                     headers=self.headers,
                     content=ormsgpack.packb(
-                        request.dict(),
+                        request, option=ormsgpack.OPT_SERIALIZE_PYDANTIC
                     ),
                     timeout=120,
                 )

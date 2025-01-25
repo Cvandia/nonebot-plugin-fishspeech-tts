@@ -35,7 +35,7 @@ tts_handler = on_regex(
 speaker_list = on_command(
     "语音列表", aliases={"语音角色列表"}, block=True, rule=to_me()
 )
-balance = on_command("语音余额", block=True, rule=to_me())
+balance = on_command("语音余额", aliases={"我的余额"}, block=True, rule=to_me())
 
 
 @tts_handler.handle()

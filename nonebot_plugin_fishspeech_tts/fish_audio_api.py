@@ -158,7 +158,7 @@ class FishAudioAPI:
                         self.api_url + "/v1/tts",
                         headers=self.headers,
                         content=ormsgpack.packb(
-                            request.dict(),
+                            request, option=ormsgpack.OPT_SERIALIZE_PYDANTIC
                         ),
                         timeout=60,
                     ) as resp,

@@ -10,13 +10,13 @@ build-backend = "pdm.backend"
 
 [project]
 name = "nonebot-plugin-fishspeech-tts"
-version = "0.3.8"
+version = "0.3.9"
 description = "小样本TTS,通过调用在线或本地api发送TTS语音"
 authors = [
     {name = "Cvandia",email = "106718176+Cvandia@users.noreply.github.com"},
 ]
 dependencies = [
-    "ormsgpack<2.0.0,>=1.6.0",
+    "ormsgpack<2.0.0,>=1.7.0",
     "httpx>=0.27.0",
     "nonebot2>=2.2.0",
     "nonebot-plugin-alconna>=0.46.4",
