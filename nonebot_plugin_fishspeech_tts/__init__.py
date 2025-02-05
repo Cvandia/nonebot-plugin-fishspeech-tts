@@ -7,7 +7,7 @@ from .config import Config
 require("nonebot_plugin_alconna")
 
 from . import matcher as _match  # noqa:F401,I001
-from . import on_start_up  # noqa:F401
+from . import hook  # noqa:F401
 
 
 usage: str = """

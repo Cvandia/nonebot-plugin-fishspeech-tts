@@ -56,22 +56,20 @@ async def tts_handle(message: UniMsg, regex_group: dict = RegexDict()):  # noqa:
         # TODO: speed = regex_group["speed"]
 
     try:
-        fish_audio_api = FishAudioAPI()
-        fish_speech_api = FishSpeechAPI()
         if is_online:
             await tts_handler.send("正在通过在线api合成语音, 请稍等")
-            request = await fish_audio_api.generate_servettsrequest(
+            request = await FishAudioAPI.generate_servettsrequest(
                 text, speaker, chunk_length
             )
             # TODO: request = await fish_audio_api.generate_ttsrequest(text, speaker, speed)
-            audio = await fish_audio_api.generate_tts(request)
+            audio = await FishAudioAPI.generate_tts(request)
         else:
             await tts_handler.send("正在通过本地api合成语音, 请稍等")
-            request = await fish_speech_api.generate_servettsrequest(
+            request = await FishSpeechAPI.generate_servettsrequest(
                 text, speaker, chunk_length
             )
             # TODO: request = await fish_speech_api.generate_ttsrequest(text, speaker, speed)
-            audio = await fish_speech_api.generate_tts(request)
+            audio = await FishSpeechAPI.generate_tts(request)
         await UniMessage.voice(raw=audio).finish()
 
     except APIException as e:
@@ -81,13 +79,11 @@ async def tts_handle(message: UniMsg, regex_group: dict = RegexDict()):  # noqa:
 @speaker_list.handle()
 async def speaker_list_handle():
     try:
-        fish_audio_api = FishAudioAPI()
-        fish_speech_api = FishSpeechAPI()
         if is_online:
-            _list = fish_audio_api.get_speaker_list()
+            _list = FishAudioAPI.get_speaker_list()
             await speaker_list.finish("语音角色列表: " + ", ".join(_list))
         else:
-            _list = fish_speech_api.get_speaker_list()
+            _list = FishSpeechAPI.get_speaker_list()
             await speaker_list.finish("语音角色列表: " + ", ".join(_list))
     except APIException as e:
         await speaker_list.finish(str(e))
@@ -96,12 +92,11 @@ async def speaker_list_handle():
 @balance.handle()
 async def balance_handle():
     try:
-        fish_audio_api = FishAudioAPI()
         if is_online:
             await balance.send("正在查询在线语音余额, 请稍等")
-            balance_float = await fish_audio_api.get_balance()
+            balance_float = await FishAudioAPI.get_balance()
             await balance.finish(f"语音余额为: {balance_float}")
         else:
-            await balance.finish("本地api无法查询余额")
+            await balance.finish("本地api无需查询余额")
     except APIException as e:
         await balance.finish(str(e))

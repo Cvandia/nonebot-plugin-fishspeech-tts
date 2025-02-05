@@ -36,26 +36,17 @@ class FishAudioAPI:
     FishAudioAPI类, 用于调用FishAudio的API接口
     """
 
-    def __init__(self):
-        self.api_url: str = API_URL
-        self.path_audio: Path = Path(config.tts_audio_path)
-        self.proxy = API_PROXY
+    api_url: str = API_URL
+    path_audio: Path = Path(config.tts_audio_path)
+    proxy = API_PROXY
+    from typing import ClassVar
 
-        # 如果在线授权码为空, 且使用在线api, 则抛出异常
-        if not config.online_authorization and config.tts_is_online:
-            raise AuthorizationException("请先在配置文件中填写在线授权码或使用离线api")
-        self.headers = {
-            "Authorization": f"Bearer {config.online_authorization}",
-        }
+    _headers: ClassVar[dict] = {
+        "Authorization": f"Bearer {config.online_authorization}",
+    }
 
-        # 如果音频文件夹不存在, 则创建音频文件夹
-        if not self.path_audio.exists():
-            self.path_audio.mkdir(parents=True)
-            logger.warning(f"音频文件夹{self.path_audio.name}不存在, 已创建")
-        elif not self.path_audio.is_dir():
-            raise FileHandleException(f"{self.path_audio.name}不是一个文件夹")
-
-    async def _get_reference_id_by_speaker(self, speaker: str) -> str:
+    @classmethod
+    async def _get_reference_id_by_speaker(cls, speaker: str) -> str:
         """
         通过说话人姓名获取说话人的reference_id
 
@@ -68,13 +59,13 @@ class FishAudioAPI:
         exception:
             APIException: 获取语音角色列表为空
         """
-        request_api = self.api_url + "/model"
+        request_api = cls.api_url + "/model"
         sort_options = ["score", "task_count", "created_at"]
-        async with AsyncClient(proxy=self.proxy) as client:
+        async with AsyncClient(proxy=cls.proxy) as client:
             for sort_by in sort_options:
                 params = {"title": speaker, "sort_by": sort_by}
                 response = await client.get(
-                    request_api, params=params, headers=self.headers
+                    request_api, params=params, headers=cls._headers
                 )
                 resp_data = response.json()
                 if resp_data["total"] == 0:
@@ -84,8 +75,9 @@ class FishAudioAPI:
                         return item["_id"]
         raise APIException("未找到对应的角色")
 
+    @classmethod
     async def generate_servettsrequest(
-        self,
+        cls,
         text: str,
         speaker_name: str,
         chunk_length: ChunkLength = ChunkLength.NORMAL,
@@ -103,15 +95,18 @@ class FishAudioAPI:
         Returns:
             ServeTTSRequest: TTS请求
         """
+        if not config.online_authorization and config.tts_is_online:
+            raise AuthorizationException("请先在配置文件中填写在线授权码或使用离线api")
+
         reference_id = None
         references = []
         try:
             if is_reference_id_first:
-                reference_id = await self._get_reference_id_by_speaker(speaker_name)
+                reference_id = await cls._get_reference_id_by_speaker(speaker_name)
             else:
                 try:
                     speaker_audio_path = get_speaker_audio_path(
-                        self.path_audio, speaker_name
+                        cls.path_audio, speaker_name
                     )
                     for audio in speaker_audio_path:
                         audio_bytes = audio.read_bytes()
@@ -121,7 +116,7 @@ class FishAudioAPI:
                         )
                 except FileHandleException:
                     logger.warning("音频文件夹不存在, 已转为在线模型优先模式")
-                    reference_id = await self._get_reference_id_by_speaker(speaker_name)
+                    reference_id = await cls._get_reference_id_by_speaker(speaker_name)
         except APIException as e:
             raise e from e
         return ServeTTSRequest(
@@ -138,7 +133,8 @@ class FishAudioAPI:
             references=references,
         )
 
-    async def generate_tts(self, request: ServeTTSRequest) -> bytes:
+    @classmethod
+    async def generate_tts(cls, request: ServeTTSRequest) -> bytes:
         """
         获取TTS音频
 
@@ -149,14 +145,14 @@ class FishAudioAPI:
             bytes: TTS音频二进制数据
         """
         if request.references:
-            self.headers["content-type"] = "application/msgpack"
+            cls._headers["content-type"] = "application/msgpack"
             try:
                 async with (
-                    AsyncClient(proxy=self.proxy) as client,
+                    AsyncClient(proxy=cls.proxy) as client,
                     client.stream(
                         "POST",
-                        self.api_url + "/v1/tts",
-                        headers=self.headers,
+                        cls.api_url + "/v1/tts",
+                        headers=cls._headers,
                         content=ormsgpack.packb(
                             request, option=ormsgpack.OPT_SERIALIZE_PYDANTIC
                         ),
@@ -169,17 +165,19 @@ class FishAudioAPI:
                 HTTPStatusError,
             ) as e:
                 logger.error(f"获取TTS音频失败: {e}")
-                if self.proxy:
+                if cls.proxy:
                     raise HTTPException("代理地址错误, 请检查代理地址是否正确") from e
                 raise HTTPException("网络错误, 请检查网络连接") from e
         else:
-            self.headers["content-type"] = "application/json"
+            cls._headers["content-type"] = "application/json"
             try:
-                async with AsyncClient(proxy=self.proxy) as client:
+                async with AsyncClient(proxy=cls.proxy) as client:
                     response = await client.post(
-                        self.api_url + "/v1/tts",
-                        headers=self.headers,
-                        json=request.dict(),
+                        cls.api_url + "/v1/tts",
+                        headers=cls._headers,
+                        json=ormsgpack.packb(
+                            request, option=ormsgpack.OPT_SERIALIZE_PYDANTIC
+                        ),
                         timeout=60,
                     )
                     return response.content
@@ -190,30 +188,32 @@ class FishAudioAPI:
                 HTTPStatusError,
             ) as e:
                 logger.error(f"获取TTS音频失败: {e}")
-                if self.proxy:
+                if cls.proxy:
                     raise HTTPException("代理地址错误, 请检查代理地址是否正确") from e
                 raise HTTPException("网络错误, 请检查网络连接") from e
 
-    async def get_balance(self) -> float:
+    @classmethod
+    async def get_balance(cls) -> float:
         """
         获取账户余额
         """
-        balance_url = self.api_url + "/wallet/self/api-credit"
-        async with AsyncClient(proxy=self.proxy) as client:
-            response = await client.get(balance_url, headers=self.headers)
+        balance_url = cls.api_url + "/wallet/self/api-credit"
+        async with AsyncClient(proxy=cls.proxy) as client:
+            response = await client.get(balance_url, headers=cls._headers)
             try:
                 return response.json()["credit"]
             except KeyError:
                 raise AuthorizationException("授权码错误或已失效") from KeyError
 
-    def get_speaker_list(self) -> list[str]:
+    @classmethod
+    def get_speaker_list(cls) -> list[str]:
         """
         获取语音角色列表
         """
         return_list = ["请查看官网了解更多: https://fish.audio/zh-CN/"]
         if not is_reference_id_first:
             try:
-                return_list.extend(get_path_speaker_list(self.path_audio))
+                return_list.extend(get_path_speaker_list(cls.path_audio))
             except FileHandleException:
                 logger.warning("音频文件夹不存在或无法读取")
         return return_list

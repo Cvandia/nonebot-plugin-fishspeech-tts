@@ -1,4 +1,5 @@
 from pathlib import Path
+from typing import ClassVar
 
 import ormsgpack
 from httpx import (
@@ -24,22 +25,15 @@ IS_STREAM = config.tts_is_stream
 
 
 class FishSpeechAPI:
-    def __init__(self):
-        self.api_url: str = API_URL
-        self.path_audio: Path = PATH_AUDIO
-        self.headers = {
-            "content-type": "application/msgpack",
-        }
+    api_url: str = API_URL
+    path_audio: Path = PATH_AUDIO
+    _headers: ClassVar[dict] = {
+        "content-type": "application/msgpack",
+    }
 
-        # 如果音频文件夹不存在, 则创建音频文件夹
-        if not self.path_audio.exists():
-            self.path_audio.mkdir(parents=True)
-            logger.warning(f"音频文件夹{self.path_audio.name}不存在, 已创建")
-        elif not self.path_audio.is_dir():
-            raise NotADirectoryError(f"{self.path_audio.name}不是一个文件夹")
-
+    @classmethod
     async def generate_servettsrequest(
-        self,
+        cls,
         text: str,
         speaker_name: str,
         chunk_length: ChunkLength = ChunkLength.NORMAL,
@@ -59,7 +53,7 @@ class FishSpeechAPI:
 
         references = []
         try:
-            speaker_audio_path = get_speaker_audio_path(self.path_audio, speaker_name)
+            speaker_audio_path = get_speaker_audio_path(cls.path_audio, speaker_name)
         except FileHandleException as e:
             raise APIException(str(e)) from e
         for audio in speaker_audio_path:
@@ -82,7 +76,8 @@ class FishSpeechAPI:
             mp3_bitrate=64,
         )
 
-    async def generate_tts(self, request: ServeTTSRequest) -> bytes:
+    @classmethod
+    async def generate_tts(cls, request: ServeTTSRequest) -> bytes:
         """
         获取TTS音频
 
@@ -94,12 +89,12 @@ class FishSpeechAPI:
         try:
             async with AsyncClient() as client:
                 response = await client.post(
-                    self.api_url,
-                    headers=self.headers,
+                    cls.api_url,
+                    headers=cls._headers,
                     content=ormsgpack.packb(
                         request, option=ormsgpack.OPT_SERIALIZE_PYDANTIC
                     ),
-                    timeout=120,
+                    timeout=60,
                 )
                 return response.content
         except (
@@ -113,7 +108,8 @@ class FishSpeechAPI:
         except Exception as e:
             raise APIException(f"{e}\n获取TTS音频失败, 检查API后端") from e
 
-    def get_speaker_list(self) -> list[str]:
+    @classmethod
+    def get_speaker_list(cls) -> list[str]:
         """
         获取说话人列表
 
@@ -121,6 +117,6 @@ class FishSpeechAPI:
             list[str]: 说话人列表
         """
         try:
-            return get_path_speaker_list(self.path_audio)
+            return get_path_speaker_list(cls.path_audio)
         except FileHandleException as e:
             raise APIException(str(e)) from e
