@@ -32,7 +32,7 @@ class FishSpeechAPI:
     }
 
     @classmethod
-    async def generate_servettsrequest(
+    def generate_servettsrequest(
         cls,
         text: str,
         speaker_name: str,

@@ -65,7 +65,7 @@ async def tts_handle(message: UniMsg, regex_group: dict = RegexDict()):  # noqa:
             audio = await FishAudioAPI.generate_tts(request)
         else:
             await tts_handler.send("正在通过本地api合成语音, 请稍等")
-            request = await FishSpeechAPI.generate_servettsrequest(
+            request = FishSpeechAPI.generate_servettsrequest(
                 text, speaker, chunk_length
             )
             # TODO: request = await fish_speech_api.generate_ttsrequest(text, speaker, speed)
