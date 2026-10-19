@@ -37,13 +37,9 @@ def make_wav():
 WAV = make_wav()
 
 
-class AudioStream(httpx.AsyncByteStream):
-    def __aiter__(self):
-        return self._chunks()
-
-    async def _chunks(self):
-        yield WAV[:20]
-        yield WAV[20:]
+async def audio_chunks():
+    yield WAV[:20]
+    yield WAV[20:]
 
 
 @pytest.fixture
@@ -77,7 +73,7 @@ async def test_cloud_json_model_and_language(mock_api, monkeypatch, model, strea
     monkeypatch.setattr(config, "tts_is_stream", streaming)
     requests = mock_api(
         lambda _: httpx.Response(
-            200, headers={"Content-Type": "audio/wav"}, stream=AudioStream()
+            200, headers={"Content-Type": "audio/wav"}, content=audio_chunks()
         )
     )
     request = await FishAudioAPI.generate_servettsrequest("[轻声]你好", "角色")
