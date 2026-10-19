@@ -38,7 +38,10 @@ WAV = make_wav()
 
 
 class AudioStream(httpx.AsyncByteStream):
-    async def __aiter__(self):
+    def __aiter__(self):
+        return self._chunks()
+
+    async def _chunks(self):
         yield WAV[:20]
         yield WAV[20:]
 
