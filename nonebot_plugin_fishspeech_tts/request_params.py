@@ -1,7 +1,7 @@
 import enum
 from typing import Literal
 
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
 
 
 class ChunkLength(enum.Enum):
@@ -15,26 +15,45 @@ class ChunkLength(enum.Enum):
 
 
 class ServeReferenceAudio(BaseModel):
-    """参考音频"""
+    """MessagePack 中直接使用音频字节，无需 Base64。"""
 
     audio: bytes
     text: str
+    speaker: int | None = Field(default=None, ge=0, le=15)
 
 
 class ServeTTSRequest(BaseModel):
-    """TTS请求"""
+    """公共参数；按目标服务剔除不支持的字段。"""
 
-    text: str  # 待合成文本
-    chunk_length: int = 200  # 分片长度
-    format: Literal["wav", "pcm", "mp3"] = "mp3"  # 音频格式
-    mp3_bitrate: Literal[64, 128, 192] = 64  # mp3比特率
-    references: list[ServeReferenceAudio] = []  # 参考音频
-    reference_id: str | None = None  # 参考音频id
-    normalize: bool = True  # 是否归一化
-    opus_bitrate: int = 24  # opus比特率
-    latency: Literal["normal", "balanced"] = "normal"  # 延迟
-    max_new_tokens: int = 500  # 最大新令牌数
-    top_p: float = 0.7  # top_p
-    repetition_penalty: float = 1.0  # 重复惩罚
-    temperature: float = 0.7  # 温度
-    streaming: bool = False  # 是否流式传输
+    text: str = Field(min_length=1)
+    chunk_length: int = Field(default=200, ge=100, le=1000)
+    format: Literal["wav", "pcm", "mp3", "opus"] = "wav"
+    mp3_bitrate: Literal[64, 128, 192] = 128
+    opus_bitrate: Literal[-1000, 24000, 32000, 48000, 64000] = -1000
+    references: list[ServeReferenceAudio] = Field(default_factory=list)
+    reference_id: str | None = None
+    normalize: bool = True
+    language: str | None = None
+    latency: Literal["normal", "balanced", "low"] = "normal"
+    max_new_tokens: int | None = None
+    top_p: float | None = Field(default=None, ge=0.1, le=1)
+    repetition_penalty: float | None = Field(default=None, ge=0.9, le=2)
+    temperature: float | None = Field(default=None, ge=0.1, le=1)
+    streaming: bool = False
+    seed: int | None = None
+    use_memory_cache: Literal["on", "off"] = "off"
+    single_chunk: bool = False
+
+    def to_payload(self, *, online: bool) -> dict:
+        # 不发送 null，使旧版本服务端也能使用自己的默认采样参数。
+        if online:
+            if self.chunk_length > ChunkLength.LONG.value:
+                raise ValueError("云端 chunk_length 不能超过 300")
+            excluded = {"streaming", "seed", "use_memory_cache", "single_chunk"}
+        else:
+            excluded = {"language", "mp3_bitrate", "opus_bitrate"}
+            if self.latency == "low":
+                excluded.add("latency")
+            if not self.single_chunk:
+                excluded.add("single_chunk")
+        return self.model_dump(exclude_none=True, exclude=excluded)

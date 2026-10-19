@@ -1,3 +1,5 @@
+import re
+
 from nonebot import get_driver, on_command, on_regex
 from nonebot.adapters import Message
 from nonebot.params import RegexDict
@@ -14,7 +16,7 @@ is_online = config.tts_is_online  # True 为在线模式，False 为本地模式
 prefix = (
     config.tts_prefix
     if config.tts_prefix
-    else next(iter(get_driver().config.command_start))
+    else next(iter(get_driver().config.command_start), "")
 )  # 命令前缀
 
 CHUNKLENGTH_MAP = {
@@ -29,7 +31,7 @@ chunk_length = CHUNKLENGTH_MAP.get(
 
 # "xxx说xxx -s int"
 tts_handler = on_regex(
-    rf"^{prefix}(?P<speaker>.+?)说(?P<text>.+)?(?:\s+-s\s+(?P<speed>.+))?$",
+    rf"^{re.escape(prefix)}(?P<speaker>.+?)说(?P<text>.+)?(?:\s+-s\s+(?P<speed>.+))?$",
     priority=15,
 )
 speaker_list = on_command(
@@ -54,6 +56,9 @@ async def tts_handle(message: UniMsg, regex_group: dict = RegexDict()):  # noqa:
         text = regex_group["text"]
         speaker = regex_group["speaker"]
         # TODO: speed = regex_group["speed"]
+
+    if not text or not text.strip():
+        await tts_handler.finish("请输入需要合成的文本，或回复包含文本的消息")
 
     try:
         if is_online:

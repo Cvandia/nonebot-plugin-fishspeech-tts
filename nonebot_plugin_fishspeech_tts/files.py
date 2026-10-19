@@ -4,6 +4,7 @@ from pathlib import Path
 from nonebot.log import logger
 
 from .exception import FileHandleException
+from .request_params import ServeReferenceAudio
 
 # 音频文件后缀
 AUDIO_FILE_SUFFIX = [
@@ -54,11 +55,16 @@ def get_speaker_audio_path(path_audio: Path, speaker_name: str) -> list[Path]:
         FileHandleException: 未找到说话人音频文件
     """
 
-    speaker_audio_path = [
-        audio
-        for audio in path_audio.iterdir()
-        if speaker_name in audio.name and audio.suffix in AUDIO_FILE_SUFFIX
-    ]
+    try:
+        speaker_audio_path = [
+            audio
+            for audio in path_audio.iterdir()
+            if audio.is_file()
+            and speaker_name in audio.name
+            and audio.suffix.lower() in AUDIO_FILE_SUFFIX
+        ]
+    except OSError as exc:
+        raise FileHandleException("参考音频目录不存在或无法读取") from exc
     logger.debug(f"获取到角色的语音路劲: {speaker_audio_path}")
     if not speaker_audio_path:
         raise FileHandleException(f"未找到角色:{speaker_name}的音频文件")
@@ -76,13 +82,28 @@ def get_path_speaker_list(path_audio: Path) -> list[str]:
         FileHandleException: 未找到说话人
     """
     speaker_list = []
-    for audio in path_audio.iterdir():
-        if audio.suffix in AUDIO_FILE_SUFFIX:
-            speaker_name = re.search(r"\[(.*)\]", audio.stem)
-            if speaker_name:
-                speaker_list.append(speaker_name.group(1))
+    try:
+        for audio in path_audio.iterdir():
+            if audio.is_file() and audio.suffix.lower() in AUDIO_FILE_SUFFIX:
+                speaker_name = re.search(r"\[(.*)\]", audio.stem)
+                if speaker_name:
+                    speaker_list.append(speaker_name.group(1))
+    except OSError as exc:
+        raise FileHandleException("参考音频目录不存在或无法读取") from exc
     # 去重
     speaker_list = list(set(speaker_list))
     if not speaker_list:
         raise FileHandleException("未找到说话人音频文件")
     return speaker_list
+
+
+def load_references(path_audio: Path, speaker_name: str) -> list[ServeReferenceAudio]:
+    try:
+        return [
+            ServeReferenceAudio(
+                audio=audio.read_bytes(), text=extract_text_by_filename(audio.name)
+            )
+            for audio in get_speaker_audio_path(path_audio, speaker_name)
+        ]
+    except OSError as exc:
+        raise FileHandleException("参考音频文件无法读取") from exc

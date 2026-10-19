@@ -69,8 +69,9 @@ Recommended mirror sites for download:
 |:-----:|:----:|:----:|:---:|:----:|
 | tts_is_online | bool | Yes | True | Whether to use the cloud API |
 | tts_chunk_length | literal | No | "normal" | Audio chunk length for requests, defaults to normal; options: short, normal, long |
-| tts_is_to_me | bool | No | True | Whether to respond only when mentioned |
-| tts_audio_path | str | No | "./data/reference_audio" | Path for voice samples, defaults to "./data/reference_audio" |
+| tts_max_new_tokens | int or None | No | None | Per-chunk token limit; omit to use server defaults |
+| tts_prefix | str or None | No | None | Command prefix |
+| tts_audio_path | str | No | "./data/参考音频" | Path for voice samples, defaults to "./data/参考音频" |
 
 **Note:** The file name format for reference audio should be: `[Character Name]Text Label.[Audio Extension]`
 
@@ -84,16 +85,29 @@ If you want to use the official API, set the configuration item `tts_is_online` 
 
 | Configuration Item | Type | Required | Default Value | Description |
 |:-----:|:----:|:----:|:---:|:----:|
-| online_authorization | str | Yes | "xxxxx" | API key for official authorization, see [link](https://fish.audio/zh-CN/go-api/api-keys/) |
+| online_authorization | str | Yes | None | API key for official authorization, see [link](https://fish.audio/zh-CN/go-api/api-keys/) |
 | online_model_first | bool | No | True | Set this to `False` if you want to call the official model with your reference audio to customize character voice; if you don't have reference audio, it will call existing voices from the official website. See [link](https://fish.audio/zh-CN/) for details. |
 
 ---
 
-If you want to use a [self-hosted](#offline-setup-fish-speech) or other [fish-speech](https://github.com/fishaudio/fish-speech) project APIs, set the configuration item `tts_is_online` to `False` and configure the following:
+If you want to use a [self-hosted](#self-hosted-api) or other [fish-speech](https://github.com/fishaudio/fish-speech) project APIs, set the configuration item `tts_is_online` to `False` and configure the following:
 
 | Configuration Item | Type | Required | Default Value | Description |
 |:----:|:----:|:----:|:---:|:----:|
 | offline_api_url | str | Yes | "http://127.0.0.1:8080" | Your `fish-speech` API address |
+
+## Current API compatibility (2026-10-19)
+
+- Cloud base URL: `https://api.fish.audio`. `POST /v1/tts` takes a `model` header; set `online_model` (default `s2.1-pro`) to `s2-pro`, `s2.1-pro-free`, `drama-3`, or the deprecated `s1` as needed. The default uses paid API credit; free-tier availability and limits are determined by Fish Audio.
+- `online_language` (optional, e.g. `zh-CN`) controls text normalization, not the voice or accent. Bracket directions in synthesis text are preserved.
+- `online_reference_ids={"Speaker":"voice-id"}` avoids title search when `online_model_first=True`. Reference voice IDs are different from base model names.
+- Cloud reference audio uses MessagePack; voice-ID requests use JSON. HTTP errors, invalid content types and empty responses cannot be sent as audio.
+- `offline_api_url` now defaults to `http://127.0.0.1:8080`. Set `offline_authorization` if the server uses `--api-key`; `offline_reference_ids` maps names to server-side saved references.
+- Local model weights are selected when starting the server. `offline_single_chunk=True` enables Drama 3 single-chunk generation. Leave it False for other models.
+- Omit `tts_max_new_tokens` to use server defaults; explicit existing values still apply. `tts_is_stream` requests local streaming WAV, but the plugin collects the complete response before sending a voice message.
+- `speech-1.5` and `speech-1.6` are retired; `s1` retires on December 31, 2026. Keep explicit URL/port settings for deployments using the old defaults.
+
+Sources: [TTS API](https://docs.fish.audio/api-reference/endpoint/openapi-v1/text-to-speech), [changelog](https://docs.fish.audio/developer-guide/getting-started/changelog), [local schema](https://github.com/fishaudio/fish-speech/blob/main/fish_speech/utils/schema.py).
 
 ## ⭐ Usage
 
@@ -119,27 +133,16 @@ If you like it, remember to give it a star ⭐
 
 ## ⭐ Additional Help
 
-### Brief Tutorial for Offline Setup
+### Self-hosted API
 
-**Prepare `fish-speech`:**
-1. Clone the `fish-speech` repository locally:
+Follow the upstream [installation](https://github.com/fishaudio/fish-speech/blob/main/docs/en/install.md) and [server](https://github.com/fishaudio/fish-speech/blob/main/docs/en/server.md) guides. After downloading S2-Pro weights:
+
 ```bash
-git clone https://github.com/fishaudio/fish-speech
-```
-2. Run `install_env.bat` to set up the virtual environment and required dependencies.
-3. Run `start.bat` for the initial startup.
-4. Modify `API_FLAGS.txt` and restart.
-
-**Start API Service:**
-1. Modify `API_FLAGS.txt` to uncomment (remove `#`) in front of `api`:
-```
-# --infer
---api
---listen 0.0.0.0:8080 \ # Listening interface
-...
+python tools/api_server.py --llama-checkpoint-path checkpoints/s2-pro --decoder-checkpoint-path checkpoints/s2-pro/codec.pth --listen 127.0.0.1:8080
 ```
 
-**Add Additional Parameters in `API_FLAGS.txt`:**
-1. `--compile` -> Whether to start the compiled model (faster TTS generation but slower startup).
-2. `--workers <number>` -> Start `<number>` of concurrent processes (must set, as default one can easily block).
-3. More details can be found in the [official documentation](https://speech.fish.audio/zh).
+Check `GET /v1/health`, configure `tts_is_online=False`, and provide local reference audio or `offline_reference_ids`. No cloud `model` header is sent to self-hosted servers.
+
+### Tests
+
+Run `uv venv`, `uv pip install -e . --group dev`, then `uv run --no-project pytest -q`. Tests use mocked HTTP responses and do not require API credentials or perform billed synthesis.
