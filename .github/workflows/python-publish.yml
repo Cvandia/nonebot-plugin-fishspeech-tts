@@ -13,20 +13,21 @@ concurrency:
 
 jobs:
   build:
-    runs-on: ubuntu-22.04
+    runs-on: windows-2022
     steps:
       - uses: actions/checkout@v4
       - uses: astral-sh/setup-uv@v6
         with:
           python-version: '3.11'
       - name: Check tag matches package version
+        shell: bash
         run: |
           python - <<'PY'
           import os
           import tomllib
           from pathlib import Path
 
-          version = tomllib.loads(Path('pyproject.toml').read_text())['project']['version']
+          version = tomllib.loads(Path('pyproject.toml').read_text(encoding='utf-8'))['project']['version']
           if os.environ['GITHUB_REF_NAME'] != f'v{version}':
               raise SystemExit('Tag does not match package version')
           PY
@@ -45,12 +46,14 @@ jobs:
 
   publish:
     needs: build
-    runs-on: ubuntu-22.04
+    runs-on: windows-2022
     steps:
       - uses: actions/download-artifact@v4
         with:
           name: python-distributions
           path: dist/
-      - uses: pypa/gh-action-pypi-publish@release/v1
-        with:
-          password: ${{ secrets.PYPI_API_TOKEN }}
+      - uses: astral-sh/setup-uv@v6
+      - name: Publish checked distributions
+        env:
+          UV_PUBLISH_TOKEN: ${{ secrets.PYPI_API_TOKEN }}
+        run: uv publish

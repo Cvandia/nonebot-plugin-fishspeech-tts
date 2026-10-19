@@ -11,11 +11,12 @@ on:
 jobs:
   ruff:
     name: Ruff Lint
-    runs-on: ubuntu-22.04
+    runs-on: windows-2022
     steps:
       - uses: actions/checkout@v4
 
-      - name: Run Ruff
-        uses: chartboost/ruff-action@v1
+      - uses: astral-sh/setup-uv@v6
         with:
-          version: 0.9.4
+          python-version: '3.11'
+      - name: Run Ruff
+        run: uvx --from ruff==0.9.4 ruff check .

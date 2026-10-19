@@ -10,7 +10,7 @@ permissions:
 
 jobs:
   test:
-    runs-on: ubuntu-22.04
+    runs-on: windows-2022
     strategy:
       fail-fast: false
       matrix:
