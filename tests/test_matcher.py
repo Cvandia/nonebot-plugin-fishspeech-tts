@@ -34,9 +34,11 @@ async def test_synthesis_sends_voice_with_directions(monkeypatch):
     monkeypatch.setattr(
         matcher.UniMessage,
         "voice",
-        lambda **kwargs: SimpleNamespace(finish=voice_finish)
-        if kwargs["raw"] == b"audio-result"
-        else None,
+        lambda **kwargs: (
+            SimpleNamespace(finish=voice_finish)
+            if kwargs["raw"] == b"audio-result"
+            else None
+        ),
     )
     with pytest.raises(FinishedException):
         await matcher.tts_handle(
