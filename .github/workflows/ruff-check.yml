@@ -11,7 +11,7 @@ on:
 jobs:
   ruff:
     name: Ruff Lint
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
     steps:
       - uses: actions/checkout@v4
 
