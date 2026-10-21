@@ -2,7 +2,6 @@ import re
 
 from nonebot import get_driver, on_command, on_regex
 from nonebot.adapters import Message
-from nonebot.params import RegexDict
 from nonebot.rule import to_me
 from nonebot_plugin_alconna import Reply, UniMessage, UniMsg
 
@@ -30,8 +29,11 @@ chunk_length = CHUNKLENGTH_MAP.get(
 )  # 请求语音长度
 
 # "xxx说xxx -s int"
+tts_pattern = (
+    rf"^{re.escape(prefix)}(?P<speaker>.+?)说(?P<text>.+)?(?:\s+-s\s+(?P<speed>.+))?$"
+)
 tts_handler = on_regex(
-    rf"^{re.escape(prefix)}(?P<speaker>.+?)说(?P<text>.+)?(?:\s+-s\s+(?P<speed>.+))?$",
+    tts_pattern,
     priority=15,
 )
 speaker_list = on_command(
@@ -41,7 +43,13 @@ balance = on_command("语音余额", aliases={"我的余额"}, block=True, rule=
 
 
 @tts_handler.handle()
-async def tts_handle(message: UniMsg, regex_group: dict = RegexDict()):  # noqa: B008
+async def tts_handle(message: UniMsg):
+    # Adapter string representations can escape brackets as CQ entities.
+    # Parse the original text segments so model directions remain unchanged.
+    matched = re.search(tts_pattern, message.extract_plain_text())
+    if matched is None:
+        return
+    regex_group = matched.groupdict()
     if message.has(Reply):
         front_reply = message[Reply, 0].msg
         if isinstance(front_reply, Message):

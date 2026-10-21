@@ -10,7 +10,7 @@ build-backend = "pdm.backend"
 
 [project]
 name = "nonebot-plugin-fishspeech-tts"
-version = "0.4.0"
+version = "0.4.1"
 description = "小样本TTS,通过调用在线或本地api发送TTS语音"
 authors = [
     {name = "Cvandia",email = "106718176+Cvandia@users.noreply.github.com"},
@@ -33,6 +33,7 @@ dev = [
     "pytest>=8,<10",
     "pytest-asyncio>=0.24,<2",
     "nonebot2[fastapi]>=2.2.0",
+    "nonebot-adapter-onebot>=2.4,<3",
 ]
 
 [tool.pytest.ini_options]
