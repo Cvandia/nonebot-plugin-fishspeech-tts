@@ -156,6 +156,12 @@ ONLINE_REFERENCE_IDS={"角色名":"your-voice-model-id"}
 
 ## ⭐ 使用
 
+### 在线聊天体验
+
+[打开语音体验站](https://fishspeech-chat-demo.arcane-krill-2332.chatgpt.site) · [网站源码与部署说明](web-demo/README.md)
+
+访客使用自己的 Fish Audio API 密钥，默认可莉音色，固定免费模型 `s2.1-pro-free`。像聊天一样发送文字或 `/可莉说[激情]你好呀`，接收可播放、可下载的语音。密钥不写入浏览器持久存储，刷新页面后清除；调用会经体验站代理转发到官方 API。
+
 > [!note]
 > 请注意你的 `COMMAND_START` 以及上述配置项。
 
