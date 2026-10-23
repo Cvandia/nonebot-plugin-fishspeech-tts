@@ -91,7 +91,7 @@ git clone https://github.com/Cvandia/nonebot-plugin-fishspeech-tts
 |  tts_chunk_length  | literal |   否   |     "normal"      | 请求时音频分片长度，默认为normal，可选：short, normal, long |
 | tts_max_new_tokens |   int   |   否   |       None        |          每个文本分片的 token 上限；不配置时采用服务端默认值，0 的含义由后端决定          |
 |   tts_audio_path   |   str   |   否   | "./data/参考音频" |            语音素材路径，默认为"./data/参考音频"            |
-|     tts_prefix     |   str   |   否   |       None        |                    触发前缀，默认为None                     |
+|     tts_prefix     |   str   |   否   |       None        | 合成指令前缀；None 使用全部 COMMAND_START，空字符串表示无前缀 |
 
 **注：参考音频的文件名格式为：［角色名］音频对应的文字标签.[音频后缀名]**
 
@@ -158,6 +158,10 @@ ONLINE_REFERENCE_IDS={"角色名":"your-voice-model-id"}
 
 > [!note]
 > 请注意你的 `COMMAND_START` 以及上述配置项。
+
+所有指令均使用 `nonebot-plugin-alconna` 响应与解析（需要 >=0.62.1）。
+合成指令保持 `角色名说文本` 写法，例如 `/可莉说[轻声]你好`；正文中的空格、引号、换行和方括号标签会原样保留。
+回复一条消息后发送 `/可莉说`，可合成被回复的文字。`tts_prefix` 仅覆盖合成指令的前缀，角色列表和余额查询继续使用 `COMMAND_START`。
 
 ### 指令：
 

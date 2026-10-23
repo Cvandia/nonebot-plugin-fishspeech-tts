@@ -70,7 +70,7 @@ Recommended mirror sites for download:
 | tts_is_online | bool | Yes | True | Whether to use the cloud API |
 | tts_chunk_length | literal | No | "normal" | Audio chunk length for requests, defaults to normal; options: short, normal, long |
 | tts_max_new_tokens | int or None | No | None | Per-chunk token limit; omit to use server defaults |
-| tts_prefix | str or None | No | None | Command prefix |
+| tts_prefix | str or None | No | None | Synthesis prefix; None uses all COMMAND_START entries, an empty string enables no prefix |
 | tts_audio_path | str | No | "./data/参考音频" | Path for voice samples, defaults to "./data/参考音频" |
 
 **Note:** The file name format for reference audio should be: `[Character Name]Text Label.[Audio Extension]`
@@ -113,6 +113,8 @@ Sources: [TTS API](https://docs.fish.audio/api-reference/endpoint/openapi-v1/tex
 
 > [!note]
 > Please pay attention to your `COMMAND_START` and the above configuration items.
+
+All commands use `nonebot-plugin-alconna` (>=0.62.1). The synthesis syntax remains `/可莉说[whispering]你好`; spaces, quotes, newlines and bracket cues are preserved. Reply to a message and send `/可莉说` to synthesize its text. `tts_prefix` overrides only the synthesis prefix; voice-list and balance commands continue to use `COMMAND_START`.
 
 ### Commands:
 
