@@ -1,0 +1,26 @@
+name: Web demo checks
+on:
+  push:
+    branches: [master, 'feat/**']
+    paths: ['web-demo/**', '.github/workflows/web-demo.yml']
+  pull_request:
+    paths: ['web-demo/**', '.github/workflows/web-demo.yml']
+permissions:
+  contents: read
+jobs:
+  demo:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: web-demo
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+          cache-dependency-path: web-demo/package-lock.json
+      - run: npm ci --ignore-scripts
+      - run: node --test tests/fish-proxy.test.mjs
+      - run: npx tsc --noEmit
+      - run: npm run build
