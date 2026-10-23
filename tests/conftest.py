@@ -1,7 +1,9 @@
 import nonebot
 import pytest
+from nonebot.adapters.onebot.v11 import Adapter
 
-nonebot.init(driver="~fastapi", command_start={"/"})
+nonebot.init(driver="~fastapi", command_start={"/", "!"})
+nonebot.get_driver().register_adapter(Adapter)
 plugin = nonebot.load_plugin("nonebot_plugin_fishspeech_tts")
 if plugin is None:
     raise RuntimeError("Fish Speech plugin failed to load")
