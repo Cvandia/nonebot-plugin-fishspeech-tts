@@ -54,9 +54,11 @@ async def test_synthesis_sends_voice_with_directions(monkeypatch, text):
     monkeypatch.setattr(
         matcher.UniMessage,
         "voice",
-        lambda **kwargs: SimpleNamespace(finish=voice_finish)
-        if kwargs["raw"] == b"audio-result"
-        else None,
+        lambda **kwargs: (
+            SimpleNamespace(finish=voice_finish)
+            if kwargs["raw"] == b"audio-result"
+            else None
+        ),
     )
     incoming = Message(MessageSegment.text(f"/角色说{text}"))
     assert "&#91;" in str(incoming)
